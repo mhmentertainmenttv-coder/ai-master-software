@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TWER बोर्ड सॉफ्टवेयर</title>
+    <title>TWER बोर्ड ऐप</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -11,132 +11,178 @@
         :root { --primary: #004d40; --sec: #e0f2f1; }
         body { font-family: sans-serif; background: var(--sec); margin: 0; padding: 0; }
         
-        /* हेडर */
         .header { background: var(--primary); color: white; padding: 15px; text-align: center; }
-        .header h1 { margin: 0; font-size: 1.2rem; }
-
-        /* मेनू */
         .nav { display: flex; justify-content: space-around; background: #00695c; padding: 10px; }
-        .nav button { background: none; border: none; color: white; font-weight: bold; cursor: pointer; }
+        .nav button { background: none; border: none; color: white; font-weight: bold; font-size:16px; }
         
-        /* कंटेंट */
-        .container { padding: 20px; max-width: 600px; margin: auto; background: white; min-height: 80vh; }
+        .container { padding: 20px; background: white; min-height: 80vh; }
         .hidden { display: none; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 5px 0 15px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        label { font-weight: bold; font-size: 0.9rem; color: #333; }
         
-        /* फॉर्म */
-        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .btn { background: var(--primary); color: white; width: 100%; padding: 12px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        .btn { background: #004d40; color: white; width: 100%; padding: 12px; border: none; border-radius: 5px; font-size: 16px; margin-top:10px; cursor: pointer; }
+        #installBtn { display: none; background: #ff9800; color: black; margin-bottom: 15px; font-weight:bold; }
         
-        /* इनस्टॉल बटन */
-        #installBtn { display: none; background: #ff9800; color: black; margin-bottom: 10px; }
+        /* लोडिंग स्पिनर */
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #004d40; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; display: none; margin: auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>THE WORLD EDUCATION RESEARCH (TWER)</h1>
-    <p>Electro Homeopathic Board & Council</p>
+    <h3>THE WORLD EDUCATION RESEARCH (TWER)</h3>
+    <p>Patna, Bihar</p>
 </div>
 
 <div class="nav">
-    <button onclick="showSection('home')">🏠 होम</button>
-    <button onclick="showSection('admission')">📝 एडमिशन</button>
-    <button onclick="showSection('ai-help')">🤖 पूछताछ</button>
+    <button onclick="show('home')">🏠 होम</button>
+    <button onclick="show('form')">📝 फॉर्म</button>
+    <button onclick="show('help')">🤖 पूछताछ</button>
 </div>
 
 <div class="container">
-    <button id="installBtn" class="btn" onclick="installApp()">📲 इस ऐप को इंस्टॉल करें</button>
+    <button id="installBtn" class="btn" onclick="installApp()">📲 ऐप इंस्टॉल करें</button>
 
     <div id="home">
         <h2>स्वागत है</h2>
-        <p>यह TWER बोर्ड का आधिकारिक डिजिटल सॉफ्टवेयर है।</p>
-        <p>यहाँ से आप ऑनलाइन एडमिशन, रिजल्ट और वेरिफिकेशन कर सकते हैं।</p>
+        <p>TWER बोर्ड ऐप में आपका स्वागत है।</p>
+        <p>नया नामांकन (Admission) लेने के लिए फॉर्म भरें।</p>
     </div>
 
-    <div id="admission" class="hidden">
-        <h2>ऑनलाइन प्रवेश फॉर्म (Admission Form)</h2>
-        <form id="studentForm" onsubmit="submitForm(event)">
-            <label>छात्र का नाम:</label>
-            <input type="text" id="sName" required>
-            
-            <label>पिता का नाम:</label>
-            <input type="text" id="fName" required>
-            
-            <label>कोर्स चुनें:</label>
-            <select id="course">
-                <option>DEHM</option>
-                <option>BEMS</option>
-                <option>MDEH</option>
-                <option>CMS & ED</option>
-            </select>
-            
-            <button type="submit" class="btn">फॉर्म जमा करें (Submit)</button>
-        </form>
+    <div id="form" class="hidden">
+        <h2 style="color:#004d40;">ऑनलाइन एडमिशन फॉर्म</h2>
+        
+        <label>Enrollment No (नामांकन संख्या):</label>
+        <input type="text" id="enrollNo" placeholder="Ex: TWER/2026/001">
+
+        <label>Student Name (छात्र का नाम):</label> 
+        <input type="text" id="sName">
+        
+        <label>Father's Name (पिता का नाम):</label> 
+        <input type="text" id="fName">
+
+        <label>Student Photo (छात्र की फोटो):</label>
+        <input type="file" id="photoInput" accept="image/*">
+        <small><i>कैमरा या गैलरी से फोटो चुनें</i></small> <br><br>
+
+        <label>Document/Marksheet (मार्कशीट फोटो):</label>
+        <input type="file" id="docInput" accept="image/*">
+        
+        <label>Mobile Number (मोबाइल):</label>
+        <input type="number" id="mobile">
+
+        <label>Course (कोर्स):</label> 
+        <select id="course">
+            <option>Select Course</option>
+            <option>DEHM</option> <option>BEMS</option> <option>MDEH</option>
+            <option>CMS & ED</option> <option>PhD</option>
+        </select>
+
+        <div class="loader" id="loading"></div>
+        <button class="btn" onclick="saveData()">फॉर्म जमा करें (Submit)</button>
     </div>
 
-    <div id="ai-help" class="hidden">
+    <div id="help" class="hidden">
         <h2>AI सहायता केंद्र</h2>
-        <div id="chat-box" style="height: 300px; overflow-y: scroll; border:1px solid #ddd; padding:10px; margin-bottom:10px;"></div>
-        <input type="text" id="userInput" placeholder="अपना सवाल पूछें...">
+        <input type="text" id="askInput" placeholder="क्या पूछना है?">
         <button class="btn" onclick="askAI()">पूछें</button>
+        <div id="replyBox" style="margin-top:10px; color:blue;"></div>
     </div>
 </div>
 
 <script>
-    // --- ऐप नेविगेशन ---
-    function showSection(id) {
+    // 1. Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyDiBvD8EBvLjoSebBpJdAW_vVn-EQjeR-k",
+        authDomain: "vaiklpikchikitsaparshadbharat.firebaseapp.com",
+        databaseURL: "https://vaiklpikchikitsaparshadbharat.firebaseio.com",
+        projectId: "vaiklpikchikitsaparshadbharat",
+        storageBucket: "vaiklpikchikitsaparshadbharat.firebasestorage.app",
+        messagingSenderId: "1079660707444",
+        appId: "1:1079660707444:web:c23dbe5e5fe00bb739db21"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // 2. इमेज कन्वर्टर (Image to Code)
+    const convertBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = () => resolve(fileReader.result);
+            fileReader.onerror = (error) => reject(error);
+        });
+    };
+
+    // 3. डेटा सेव फंक्शन
+    async function saveData() {
+        const enrollNo = document.getElementById('enrollNo').value;
+        const name = document.getElementById('sName').value;
+        const father = document.getElementById('fName').value;
+        const mobile = document.getElementById('mobile').value;
+        const course = document.getElementById('course').value;
+        const photoFile = document.getElementById('photoInput').files[0];
+        const docFile = document.getElementById('docInput').files[0];
+
+        if(name === "" || mobile === "") { alert("कृपया नाम और मोबाइल भरें!"); return; }
+
+        // लोडिंग दिखाएं
+        document.getElementById('loading').style.display = "block";
+
+        let photoUrl = "";
+        let docUrl = "";
+
+        try {
+            if(photoFile) { photoUrl = await convertBase64(photoFile); }
+            if(docFile) { docUrl = await convertBase64(docFile); }
+
+            await db.ref('students').push({
+                enrollment_no: enrollNo,
+                student_name: name,
+                father_name: father,
+                mobile: mobile,
+                course: course,
+                photo: photoUrl, // फोटो यहाँ सेव होगी
+                document: docUrl, // डॉक्यूमेंट यहाँ सेव होगा
+                date: new Date().toLocaleString()
+            });
+
+            alert("✅ फॉर्म और फोटो सफलतापूर्वक जमा हो गए!");
+            document.getElementById('sName').value = "";
+            document.getElementById('photoInput').value = ""; // क्लियर करें
+            document.getElementById('docInput').value = "";
+        } catch (error) {
+            alert("❌ फोटो बहुत बड़ी है या इंटरनेट धीमा है। कृपया छोटी फोटो डालें।");
+            console.error(error);
+        }
+        
+        document.getElementById('loading').style.display = "none";
+    }
+
+    // 4. पेज नेविगेशन
+    function show(id) {
         document.getElementById('home').classList.add('hidden');
-        document.getElementById('admission').classList.add('hidden');
-        document.getElementById('ai-help').classList.add('hidden');
+        document.getElementById('form').classList.add('hidden');
+        document.getElementById('help').classList.add('hidden');
         document.getElementById(id).classList.remove('hidden');
     }
 
-    // --- फॉर्म सबमिशन ---
-    function submitForm(e) {
-        e.preventDefault();
-        const name = document.getElementById('sName').value;
-        const course = document.getElementById('course').value;
-        alert("धन्यवाद! " + name + " का " + course + " कोर्स के लिए आवेदन स्वीकार कर लिया गया है।");
-        // यहाँ हम बाद में डेटाबेस कोड जोड़ेंगे
-    }
-
-    // --- AI लॉजिक (Gemini) ---
-    const GEMINI_KEY = "AIzaSyDSEp8f_8YwrSa_bkBoMc7kKldWy1RVIvI"; 
+    // 5. AI और इनस्टॉल
     async function askAI() {
-        const input = document.getElementById('userInput').value;
-        const chat = document.getElementById('chat-box');
-        chat.innerHTML += `<p><b>You:</b> ${input}</p>`;
-        
-        try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_KEY}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contents: [{ parts: [{ text: input }] }] })
-            });
-            const data = await res.json();
-            chat.innerHTML += `<p style="color:green"><b>AI:</b> ${data.candidates[0].content.parts[0].text}</p>`;
-        } catch(e) { chat.innerHTML += `<p style="color:red">Error!</p>`; }
+        const txt = document.getElementById('askInput').value;
+        const key = "AIzaSyDSEp8f_8YwrSa_bkBoMc7kKldWy1RVIvI";
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`, {
+            method: "POST", headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ contents: [{ parts: [{ text: txt }] }] })
+        });
+        const data = await res.json();
+        document.getElementById('replyBox').innerText = data.candidates[0].content.parts[0].text;
     }
-
-    // --- इंस्टॉल फीचर (PWA) ---
+    
     let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('installBtn').style.display = 'block';
-    });
-
-    function installApp() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
-                }
-                deferredPrompt = null;
-            });
-        }
-    }
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('installBtn').style.display = 'block'; });
+    function installApp() { if (deferredPrompt) deferredPrompt.prompt(); }
 </script>
 </body>
 </html>
