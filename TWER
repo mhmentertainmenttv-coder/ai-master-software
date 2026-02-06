@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TWER बोर्ड सॉफ्टवेयर</title>
+    <link rel="manifest" href="manifest.json">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+        :root { --primary: #004d40; --sec: #e0f2f1; }
+        body { font-family: sans-serif; background: var(--sec); margin: 0; padding: 0; }
+        
+        /* हेडर */
+        .header { background: var(--primary); color: white; padding: 15px; text-align: center; }
+        .header h1 { margin: 0; font-size: 1.2rem; }
+
+        /* मेनू */
+        .nav { display: flex; justify-content: space-around; background: #00695c; padding: 10px; }
+        .nav button { background: none; border: none; color: white; font-weight: bold; cursor: pointer; }
+        
+        /* कंटेंट */
+        .container { padding: 20px; max-width: 600px; margin: auto; background: white; min-height: 80vh; }
+        .hidden { display: none; }
+        
+        /* फॉर्म */
+        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .btn { background: var(--primary); color: white; width: 100%; padding: 12px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        
+        /* इनस्टॉल बटन */
+        #installBtn { display: none; background: #ff9800; color: black; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>THE WORLD EDUCATION RESEARCH (TWER)</h1>
+    <p>Electro Homeopathic Board & Council</p>
+</div>
+
+<div class="nav">
+    <button onclick="showSection('home')">🏠 होम</button>
+    <button onclick="showSection('admission')">📝 एडमिशन</button>
+    <button onclick="showSection('ai-help')">🤖 पूछताछ</button>
+</div>
+
+<div class="container">
+    <button id="installBtn" class="btn" onclick="installApp()">📲 इस ऐप को इंस्टॉल करें</button>
+
+    <div id="home">
+        <h2>स्वागत है</h2>
+        <p>यह TWER बोर्ड का आधिकारिक डिजिटल सॉफ्टवेयर है।</p>
+        <p>यहाँ से आप ऑनलाइन एडमिशन, रिजल्ट और वेरिफिकेशन कर सकते हैं।</p>
+    </div>
+
+    <div id="admission" class="hidden">
+        <h2>ऑनलाइन प्रवेश फॉर्म (Admission Form)</h2>
+        <form id="studentForm" onsubmit="submitForm(event)">
+            <label>छात्र का नाम:</label>
+            <input type="text" id="sName" required>
+            
+            <label>पिता का नाम:</label>
+            <input type="text" id="fName" required>
+            
+            <label>कोर्स चुनें:</label>
+            <select id="course">
+                <option>DEHM</option>
+                <option>BEMS</option>
+                <option>MDEH</option>
+                <option>CMS & ED</option>
+            </select>
+            
+            <button type="submit" class="btn">फॉर्म जमा करें (Submit)</button>
+        </form>
+    </div>
+
+    <div id="ai-help" class="hidden">
+        <h2>AI सहायता केंद्र</h2>
+        <div id="chat-box" style="height: 300px; overflow-y: scroll; border:1px solid #ddd; padding:10px; margin-bottom:10px;"></div>
+        <input type="text" id="userInput" placeholder="अपना सवाल पूछें...">
+        <button class="btn" onclick="askAI()">पूछें</button>
+    </div>
+</div>
+
+<script>
+    // --- ऐप नेविगेशन ---
+    function showSection(id) {
+        document.getElementById('home').classList.add('hidden');
+        document.getElementById('admission').classList.add('hidden');
+        document.getElementById('ai-help').classList.add('hidden');
+        document.getElementById(id).classList.remove('hidden');
+    }
+
+    // --- फॉर्म सबमिशन ---
+    function submitForm(e) {
+        e.preventDefault();
+        const name = document.getElementById('sName').value;
+        const course = document.getElementById('course').value;
+        alert("धन्यवाद! " + name + " का " + course + " कोर्स के लिए आवेदन स्वीकार कर लिया गया है।");
+        // यहाँ हम बाद में डेटाबेस कोड जोड़ेंगे
+    }
+
+    // --- AI लॉजिक (Gemini) ---
+    const GEMINI_KEY = "AIzaSyDSEp8f_8YwrSa_bkBoMc7kKldWy1RVIvI"; 
+    async function askAI() {
+        const input = document.getElementById('userInput').value;
+        const chat = document.getElementById('chat-box');
+        chat.innerHTML += <p><b>You:</b> ${input}</p>;
+        
+        try {
+            const res = await fetch(https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_KEY}, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contents: [{ parts: [{ text: input }] }] })
+            });
+            const data = await res.json();
+            chat.innerHTML += <p style="color:green"><b>AI:</b> ${data.candidates[0].content.parts[0].text}</p>;
+        } catch(e) { chat.innerHTML += <p style="color:red">Error!</p>; }
+    }
+
+    // --- इंस्टॉल फीचर (PWA) ---
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('installBtn').style.display = 'block';
+    });
+
+    function installApp() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                }
+                deferredPrompt = null;
+            });
+        }
+    }
+</script>
+</body>
+</html>
