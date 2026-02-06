@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI मास्टर सॉफ्टवेयर</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+        :root { --primary: #1a73e8; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 10px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; }
+        #chat-box { height: 350px; overflow-y: auto; border: 1px solid #eee; padding: 10px; margin-bottom: 15px; background: #fafafa; border-radius: 8px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="step-login">
+        <h2>सॉफ्टवेयर एक्टिवेशन</h2>
+        <p>अपना लाइसेंस कोड डालें:</p>
+        <input type="text" id="licenseKey" placeholder="ADMIN123 डालें">
+        <button class="btn" onclick="verifyLicense()">सॉफ्टवेयर शुरू करें</button>
+    </div>
+    <div id="step-main" class="hidden">
+        <h3 id="display-name">AI सहायक सक्रिय है</h3>
+        <div id="chat-box"></div>
+        <textarea id="userInput" placeholder="AI से कुछ भी पूछें..."></textarea>
+        <button class="btn" onclick="askAI()">पूछें</button>
+    </div>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDiBvD8EBvLjoSebBpJdAW_vVn-EQjeR-k",
+        authDomain: "vaiklpikchikitsaparshadbharat.firebaseapp.com",
+        databaseURL: "https://vaiklpikchikitsaparshadbharat.firebaseio.com",
+        projectId: "vaiklpikchikitsaparshadbharat",
+        storageBucket: "vaiklpikchikitsaparshadbharat.firebasestorage.app",
+        messagingSenderId: "1079660707444",
+        appId: "1:1079660707444:web:c23dbe5e5fe00bb739db21"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const GEMINI_KEY = "AIzaSyDSEp8f_8YwrSa_bkBoMc7kKldWy1RVIvI"; 
+
+    function verifyLicense() {
+        const key = document.getElementById('licenseKey').value;
+        if(key === "ADMIN123") {
+            document.getElementById('step-login').classList.add('hidden');
+            document.getElementById('step-main').classList.remove('hidden');
+        } else { alert("गलत कोड! कृपया ADMIN123 आज़माएं।"); }
+    }
+
+    async function askAI() {
+        const input = document.getElementById('userInput').value;
+        const chat = document.getElementById('chat-box');
+        if(!input) return;
+        chat.innerHTML += <p><b>आप:</b> ${input}</p>;
+        
+        try {
+            const res = await fetch(https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_KEY}, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contents: [{ parts: [{ text: input }] }] })
+            });
+            const data = await res.json();
+            const reply = data.candidates[0].content.parts[0].text;
+            chat.innerHTML += <p style="color:blue"><b>AI:</b> ${reply}</p>;
+            db.ref('chats').push({ user: input, ai: reply, time: Date.now() });
+        } catch (e) {
+            chat.innerHTML += <p style="color:red"><b>त्रुटि:</b> कृपया अपना सेटअप जांचें।</p>;
+        }
+        document.getElementById('userInput').value = "";
+    }
+</script>
+</body>
+</html>
