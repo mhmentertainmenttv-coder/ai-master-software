@@ -3,72 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TWER एडमिन पैनल</title>
+    <title>TWER Board App</title>
+    <link rel="manifest" href="manifest.json">
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { color: #004d40; text-align: center; }
+        :root { --primary: #004d40; --accent: #ff9800; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 0; padding-bottom: 70px; }
         
-        /* टेबल डिजाइन */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-        th { background: #004d40; color: white; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
+        /* हेडर (लोगो वाला) */
+        .header { background: white; padding: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; border-bottom: 4px solid var(--primary); }
+        .logo-area img { height: 70px; display: block; margin: auto; }
+        .header h1 { margin: 5px 0 0 0; font-size: 1.1rem; color: var(--primary); font-weight: bold; }
+        .header p { margin: 0; font-size: 0.8rem; color: #555; }
 
-        /* बटन */
-        .btn { padding: 5px 10px; color: white; border: none; cursor: pointer; border-radius: 4px; text-decoration: none; font-size: 14px; }
-        .view-btn { background: #1a73e8; }
-        .del-btn { background: #d93025; }
+        /* नेविगेशन */
+        .nav { display: flex; justify-content: space-around; background: var(--primary); padding: 12px; margin-top: -5px; }
+        .nav button { background: none; border: none; color: white; font-weight: bold; font-size: 16px; cursor: pointer; }
         
-        /* लॉगिन स्क्रीन */
-        #login-screen { text-align: center; margin-top: 50px; padding: 20px; background: white; max-width: 300px; margin: 50px auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        input { padding: 10px; width: 90%; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        .login-btn { padding: 10px 20px; background: #004d40; color: white; border: none; cursor: pointer; border-radius: 5px; width: 100%; font-weight: bold; }
-        
+        /* कंटेनर */
+        .container { padding: 15px; max-width: 600px; margin: auto; }
+        .card { background: white; padding: 20px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .hidden { display: none; }
-        img.preview { width: 50px; height: 50px; object-fit: cover; border-radius: 50%; }
+        
+        /* फॉर्म */
+        input, select, textarea { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        label { font-weight: 600; font-size: 0.9rem; color: #333; }
+        .btn { background: var(--primary); color: white; width: 100%; padding: 14px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        
+        /* नोटिस बोर्ड */
+        #publicity-board { text-align: center; border: 2px dashed var(--accent); background: #fff8e1; padding: 10px; margin-bottom: 20px; border-radius: 10px; display: none; }
+        #pub-img { max-width: 100%; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #pub-text { font-size: 1rem; color: #333; font-weight: 500; }
+
+        /* संपर्क पट्टी */
+        .contact-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        .c-btn { flex: 1; padding: 15px; text-align: center; text-decoration: none; font-weight: bold; color: white; }
     </style>
 </head>
 <body>
 
-<div id="login-screen">
-    <h2 style="margin-top:0;">🔐 एडमिन लॉगिन</h2>
-    
-    <label style="float:left; font-weight:bold; font-size:12px;">User ID:</label>
-    <input type="text" id="userId" placeholder="Enter User ID">
-    
-    <label style="float:left; font-weight:bold; font-size:12px;">Password:</label>
-    <input type="password" id="passInput" placeholder="Enter Password">
-    
-    <button class="login-btn" onclick="checkLogin()">सुरक्षित लॉगिन करें</button>
+<div class="header">
+    <div class="logo-area">
+        <img src="logo.jpg" onerror="this.style.display='none'" alt="TWER Logo">
+    </div>
+    <h1>THE WORLD EDUCATION RESEARCH (TWER)</h1>
+    <p>Electro Homeopathic Board & Council, Patna</p>
 </div>
 
-<div id="dashboard" class="container hidden">
-    <h2>🎓 TWER छात्र डेटाबेस (Admin)</h2>
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <p>कुल छात्र: <b id="total-count">0</b></p>
-        <button onclick="logout()" style="background:red; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">Logout</button>
+<div class="nav">
+    <button onclick="show('home')">🏠 होम</button>
+    <button onclick="show('form')">📝 एडमिशन</button>
+    <button onclick="show('help')">🤖 पूछताछ</button>
+</div>
+
+<div class="container">
+    <button id="installBtn" class="btn" style="background:var(--accent); color:black; display:none; margin-bottom:15px;" onclick="installApp()">📲 ऐप डाउनलोड करें</button>
+
+    <div id="home">
+        <div id="publicity-board" class="card">
+            <h3 style="margin-top:0; color:#e65100;">📢 सूचना (Notice)</h3>
+            <img id="pub-img" src="" style="display:none;">
+            <p id="pub-text"></p>
+        </div>
+
+        <div class="card">
+            <h3>👋 स्वागत है</h3>
+            <p>TWER बोर्ड के आधिकारिक डिजिटल ऐप पर आपका स्वागत है।</p>
+            <div style="background:#e8f5e9; padding:10px; border-radius:5px; margin-top:10px;">
+                <p>📞 <b>हेल्पलाइन:</b> 9431461398, 9472058415</p>
+                <p>📧 <b>ईमेल:</b> twerdata@gmail.com</p>
+            </div>
+            <br>
+            <button onclick="window.location.href='admin.html'" style="background:#eee; color:#555; border:none; padding:5px 10px; border-radius:4px; font-size:12px;">Admin Login 🔐</button>
+        </div>
     </div>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>फोटो</th>
-                <th>नाम / पिता</th>
-                <th>संपर्क (Mobile)</th>
-                <th>कोर्स</th>
-                <th>डॉक्यूमेंट</th>
-            </tr>
-        </thead>
-        <tbody id="table-body">
-            </tbody>
-    </table>
+
+    <div id="form" class="hidden">
+        <div class="card">
+            <h2 style="color:var(--primary); margin-top:0;">Admission Form</h2>
+            <label>Enrollment No:</label> <input type="text" id="enrollNo">
+            <label>Student Name:</label> <input type="text" id="sName">
+            <label>Father's Name:</label> <input type="text" id="fName">
+            <label>Mobile No:</label> <input type="number" id="mobile">
+            <label>Email ID:</label> <input type="email" id="email" placeholder="Required for updates">
+            
+            <label>Photo:</label> <input type="file" id="photoInput" accept="image/*">
+            <label>Document:</label> <input type="file" id="docInput" accept="image/*">
+            
+            <label>Course:</label> 
+            <select id="course">
+                <option>DEHM</option> <option>BEMS</option> <option>MDEH</option> <option>CMS & ED</option>
+            </select>
+            
+            <div id="loading" style="display:none; text-align:center;">⏳ Uploading...</div>
+            <button class="btn" onclick="saveData()">Submit Form</button>
+        </div>
+    </div>
+
+    <div id="help" class="hidden">
+        <div class="card">
+            <h2>AI पूछताछ केंद्र</h2>
+            <p>कोई भी सवाल पूछें:</p>
+            <input type="text" id="askInput" placeholder="यहाँ लिखें...">
+            <button class="btn" onclick="askAI()">पूछें</button>
+            <div id="replyBox" style="margin-top:15px; color:#0056b3;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="contact-bar">
+    <a href="tel:9431461398" class="c-btn" style="background:#0277bd;">📞 कॉल करें</a>
+    <a href="https://wa.me/919431461398" class="c-btn" style="background:#2e7d32;">💬 व्हाट्सएप</a>
 </div>
 
 <script>
-    // 1. Firebase Config
+    // --- Google Script Link यहाँ डालें ---
+    const SCRIPT_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE"; 
+
     const firebaseConfig = {
         apiKey: "AIzaSyDiBvD8EBvLjoSebBpJdAW_vVn-EQjeR-k",
         authDomain: "vaiklpikchikitsaparshadbharat.firebaseapp.com",
@@ -81,58 +133,80 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // 2. नया लॉगिन सिस्टम (ID: Twerdata, Pass: 1979)
-    function checkLogin() {
-        const uid = document.getElementById('userId').value;
-        const pass = document.getElementById('passInput').value;
-        
-        // यहाँ चेक हो रहा है
-        if(uid === "Twerdata" && pass === "1979") {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            loadData(); // सही होने पर डेटा लोड करें
-        } else {
-            alert("❌ गलत ID या पासवर्ड! कृपया दोबारा कोशिश करें।");
+    // --- 1. पब्लिसिटी बोर्ड लोड करना ---
+    db.ref('publicity').on('value', (snap) => {
+        const val = snap.val();
+        if(val) {
+            document.getElementById('publicity-board').style.display = 'block';
+            document.getElementById('pub-text').innerText = val.message || "";
+            const imgEl = document.getElementById('pub-img');
+            if(val.image) {
+                imgEl.src = val.image;
+                imgEl.style.display = 'block';
+            } else {
+                imgEl.style.display = 'none';
+            }
         }
-    }
+    });
 
-    // 3. डेटा लोड करना
-    function loadData() {
-        const table = document.getElementById('table-body');
-        table.innerHTML = "<tr><td colspan='5'>डेटा लोड हो रहा है... कृपया प्रतीक्षा करें</td></tr>"; 
-        
-        db.ref('students').on('value', (snapshot) => {
-            table.innerHTML = ""; // पुराना डेटा साफ़
-            let count = 0;
+    // --- 2. डेटा सेविंग ---
+    const convertBase64 = (file) => new Promise((resolve, reject) => {
+        const fr = new FileReader(); fr.readAsDataURL(file);
+        fr.onload = () => resolve(fr.result); fr.onerror = reject;
+    });
 
-            if(!snapshot.exists()){
-                 table.innerHTML = "<tr><td colspan='5'>अभी कोई डेटा नहीं है।</td></tr>";
-                 return;
+    async function saveData() {
+        const name = document.getElementById('sName').value;
+        const mobile = document.getElementById('mobile').value;
+        if(!name || !mobile) { alert("Name & Mobile is required!"); return; }
+
+        document.getElementById('loading').style.display = 'block';
+        try {
+            const pFile = document.getElementById('photoInput').files[0];
+            const dFile = document.getElementById('docInput').files[0];
+            let pUrl = pFile ? await convertBase64(pFile) : "";
+            let dUrl = dFile ? await convertBase64(dFile) : "";
+
+            const data = {
+                enrollNo: document.getElementById('enrollNo').value,
+                student_name: name,
+                father_name: document.getElementById('fName').value,
+                mobile: mobile,
+                email: document.getElementById('email').value,
+                course: document.getElementById('course').value,
+                photo: pUrl, document: dUrl, date: new Date().toLocaleString()
+            };
+
+            await db.ref('students').push(data);
+            
+            if(SCRIPT_URL.includes("http")) {
+                fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
             }
 
-            snapshot.forEach((child) => {
-                const data = child.val();
-                count++;
-                
-                let photoHTML = data.photo ? `<img src="${data.photo}" class="preview" onclick="window.open('${data.photo}')" style="cursor:pointer">` : "No Photo";
-                let docHTML = data.document ? `<a href="${data.document}" download="document.png" target="_blank" class="btn view-btn">📄 View</a>` : "No Doc";
-
-                const row = `
-                    <tr>
-                        <td>${photoHTML}</td>
-                        <td><b>${data.student_name}</b><br><small>S/o ${data.father_name}</small><br><small style="color:blue">${data.enrollment_no || ''}</small></td>
-                        <td>${data.mobile}<br><small>${data.email || ''}</small></td>
-                        <td><span style="background:#e0f2f1; padding:2px 5px; border-radius:3px;">${data.course}</span></td>
-                        <td>${docHTML}</td>
-                    </tr>
-                `;
-                table.innerHTML += row;
-            });
-            document.getElementById('total-count').innerText = count;
-        });
+            alert("✅ Form Submitted Successfully!");
+            location.reload();
+        } catch(e) { console.error(e); alert("Error saving data."); }
+        document.getElementById('loading').style.display = 'none';
     }
 
-    function logout() { location.reload(); }
+    function show(id) {
+        ['home','form','help'].forEach(x => document.getElementById(x).classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+    }
+
+    async function askAI() {
+        const txt = document.getElementById('askInput').value;
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyDSEp8f_8YwrSa_bkBoMc7kKldWy1RVIvI`, {
+            method: "POST", headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ contents: [{ parts: [{ text: txt }] }] })
+        });
+        const d = await res.json();
+        document.getElementById('replyBox').innerText = d.candidates[0].content.parts[0].text;
+    }
+    
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('installBtn').style.display = 'block'; });
+    function installApp() { if (deferredPrompt) deferredPrompt.prompt(); }
 </script>
 </body>
 </html>
