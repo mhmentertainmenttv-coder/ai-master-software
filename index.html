@@ -9,11 +9,12 @@
         .header { background: white; padding: 15px; text-align: center; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-bottom: 4px solid #004d40; }
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         .card { background: white; padding: 20px; border-radius: 10px; text-align: center; cursor: pointer; border-top: 5px solid #004d40; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .card:active { transform: scale(0.98); background: #b2dfdb; }
         .hidden { display: none; }
         input, select, textarea { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         label { font-weight: bold; margin-top: 10px; display: block; font-size: 14px; }
         .submit-btn { background: #004d40; color: white; width: 100%; padding: 14px; border: none; margin-top: 15px; border-radius: 5px; font-size: 16px; font-weight: bold; }
-        .upload-box { background: #e8f5e9; padding: 10px; border: 1px dashed #004d40; border-radius: 5px; margin-bottom: 10px; }
+        .upload-box { background: #e8f5e9; padding: 15px; border: 2px dashed #004d40; border-radius: 8px; margin-bottom: 20px; text-align: center; }
     </style>
 </head>
 <body>
@@ -37,11 +38,10 @@
     <hr>
     
     <div class="upload-box">
-        <label>📸 Applicant Photo (अपना फोटो):</label> 
+        <label>📸 Applicant Photo (अपना फोटो चुनें):</label>
         <input type="file" id="photoApp" accept="image/*">
-    </div>
-    <div class="upload-box">
-        <label>📄 Document (Aadhar/Certificate):</label> 
+        
+        <label style="margin-top:15px;">📄 Document (Aadhar/Certificate):</label>
         <input type="file" id="docMain" accept="image/*,application/pdf">
     </div>
 
@@ -49,7 +49,7 @@
     <label>Father's Name (पिता का नाम):</label> <input type="text" id="father">
     <label>Mobile Number:</label> <input type="number" id="mobile">
     <label>Email ID:</label> <input type="email" id="email">
-    <label>Full Address (पता):</label> <textarea id="address" rows="2"></textarea>
+    <label>Address (पता):</label> <textarea id="address" rows="2"></textarea>
 
     <div id="extra-fields"></div>
 
@@ -58,8 +58,8 @@
 </div>
 
 <script>
-    // 🔴 यहाँ अपनी Google Script URL पेस्ट करें (Version 3 वाली)
-    const SCRIPT_URL = "YOUR_NEW_GOOGLE_SCRIPT_URL_HERE"; 
+    // ✅ आपकी Version 3 वाली लिंक यहाँ डाल दी गई है
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbywqwgLzn4MGLN0_3KlUB_UKaxdpJLqKi0lU6TUoiRpcsRTgl5B74YbiLUIS9pV55aH/exec"; 
 
     let currentType = "";
 
@@ -70,7 +70,7 @@
         document.getElementById('form-title').innerText = type + " Form";
         
         let extraHTML = "";
-        if(type === 'Student') extraHTML = `<label>Course:</label><select id="extra1"><option>DEHM</option><option>BEMS</option><option>MDEH</option></select>`;
+        if(type === 'Student') extraHTML = `<label>Select Course:</label><select id="extra1"><option>DEHM</option><option>BEMS</option><option>MDEH</option><option>CMS & ED</option></select>`;
         if(type === 'Institute') extraHTML = `<label>Institute Name:</label><input type="text" id="extra1"><label>Principal Name:</label><input type="text" id="extra2">`;
         if(type === 'Practitioner') extraHTML = `<label>Course Name:</label><input type="text" id="extra1">`;
         if(type === 'Dealer') extraHTML = `<label>Shop Name:</label><input type="text" id="extra1"><label>GST No:</label><input type="text" id="extra2">`;
@@ -78,7 +78,6 @@
         document.getElementById('extra-fields').innerHTML = extraHTML;
     }
 
-    // फोटो को टेक्स्ट में बदलने का फंक्शन
     const toBase64 = file => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -91,15 +90,13 @@
         const mobile = document.getElementById('mobile').value;
         const status = document.getElementById('status');
 
-        if(!name || !mobile) { alert("Name & Mobile required!"); return; }
+        if(!name || !mobile) { alert("कृपया नाम और मोबाइल नंबर भरें!"); return; }
         
-        status.innerText = "⏳ Uploading & Submitting...";
+        status.innerText = "⏳ कृपया प्रतीक्षा करें (Submitting)...";
         
         try {
-            // फोटो और डॉक्युमेंट कलेक्ट करना
             const photoFile = document.getElementById('photoApp').files[0];
             const docFile = document.getElementById('docMain').files[0];
-            
             const photoBase64 = photoFile ? await toBase64(photoFile) : "";
             const docBase64 = docFile ? await toBase64(docFile) : "";
 
@@ -123,12 +120,12 @@
                 body: JSON.stringify(data)
             });
 
-            alert("✅ Success! आपका फॉर्म जमा हो गया है।");
+            alert("✅ बधाई हो! आपका फॉर्म जमा हो गया है।");
             location.reload();
 
         } catch (error) {
             alert("❌ Error: " + error);
-            status.innerText = "Error. Please try again.";
+            status.innerText = "Failed. Try Again.";
         }
     }
 </script>
