@@ -22,11 +22,10 @@
         function login() {
             var u = document.getElementById('u').value;
             var p = document.getElementById('p').value;
-            
-            // यहाँ अपनी ID और Password सेट करें
+            // ID Password
             if(u === "Twerdata" && p === "1979") {
                 alert("✅ Login Successful!");
-                // लॉगिन सही होने पर Google Sheet खुलेगी
+                // गूगल शीट खोलने का लिंक
                 window.location.href = "https://docs.google.com/spreadsheets"; 
             } else {
                 alert("❌ गलत आईडी या पासवर्ड!");
