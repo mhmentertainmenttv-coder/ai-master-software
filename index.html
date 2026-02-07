@@ -9,11 +9,11 @@
         .header { background: white; padding: 15px; text-align: center; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-bottom: 4px solid #004d40; }
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         .card { background: white; padding: 20px; border-radius: 10px; text-align: center; cursor: pointer; border-top: 5px solid #004d40; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .card:active { transform: scale(0.98); background: #b2dfdb; }
         .hidden { display: none; }
         input, select, textarea { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         label { font-weight: bold; margin-top: 10px; display: block; font-size: 14px; }
         .submit-btn { background: #004d40; color: white; width: 100%; padding: 14px; border: none; margin-top: 15px; border-radius: 5px; font-size: 16px; font-weight: bold; }
+        .upload-box { background: #e8f5e9; padding: 10px; border: 1px dashed #004d40; border-radius: 5px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -36,11 +36,20 @@
     <h3 id="form-title" style="color:#004d40; margin-top:0;">Form</h3>
     <hr>
     
+    <div class="upload-box">
+        <label>📸 Applicant Photo (अपना फोटो):</label> 
+        <input type="file" id="photoApp" accept="image/*">
+    </div>
+    <div class="upload-box">
+        <label>📄 Document (Aadhar/Certificate):</label> 
+        <input type="file" id="docMain" accept="image/*,application/pdf">
+    </div>
+
     <label>Name (नाम):</label> <input type="text" id="name">
     <label>Father's Name (पिता का नाम):</label> <input type="text" id="father">
     <label>Mobile Number:</label> <input type="number" id="mobile">
     <label>Email ID:</label> <input type="email" id="email">
-    <label>Full Address (पता):</label> <textarea id="address" rows="3"></textarea>
+    <label>Full Address (पता):</label> <textarea id="address" rows="2"></textarea>
 
     <div id="extra-fields"></div>
 
@@ -49,8 +58,8 @@
 </div>
 
 <script>
-    // ✅ मैंने आपकी सही लिंक यहाँ डाल दी है
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHuWRxybIS1_U1i3pVURdfv4si1BVBVOgAG9PzAZ3AIAu5AX_3slsCIUnNKu4nAQm8Fw/exec"; 
+    // 🔴 यहाँ अपनी Google Script URL पेस्ट करें (Version 3 वाली)
+    const SCRIPT_URL = "YOUR_NEW_GOOGLE_SCRIPT_URL_HERE"; 
 
     let currentType = "";
 
@@ -61,49 +70,66 @@
         document.getElementById('form-title').innerText = type + " Form";
         
         let extraHTML = "";
-        if(type === 'Student') extraHTML = `<label>Select Course:</label><select id="extra1"><option>DEHM</option><option>BEMS</option><option>MDEH</option><option>CMS & ED</option></select>`;
-        
+        if(type === 'Student') extraHTML = `<label>Course:</label><select id="extra1"><option>DEHM</option><option>BEMS</option><option>MDEH</option></select>`;
         if(type === 'Institute') extraHTML = `<label>Institute Name:</label><input type="text" id="extra1"><label>Principal Name:</label><input type="text" id="extra2">`;
-        
-        if(type === 'Practitioner') extraHTML = `<label>Course Name (e.g. DEHM):</label><input type="text" id="extra1">`;
-        
-        if(type === 'Dealer') extraHTML = `<label>Shop/Firm Name:</label><input type="text" id="extra1"><label>GST Number:</label><input type="text" id="extra2">`;
+        if(type === 'Practitioner') extraHTML = `<label>Course Name:</label><input type="text" id="extra1">`;
+        if(type === 'Dealer') extraHTML = `<label>Shop Name:</label><input type="text" id="extra1"><label>GST No:</label><input type="text" id="extra2">`;
         
         document.getElementById('extra-fields').innerHTML = extraHTML;
     }
 
-    function submitData() {
+    // फोटो को टेक्स्ट में बदलने का फंक्शन
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+
+    async function submitData() {
         const name = document.getElementById('name').value;
         const mobile = document.getElementById('mobile').value;
         const status = document.getElementById('status');
 
-        if(!name || !mobile) { alert("कृपया नाम और मोबाइल नंबर भरें!"); return; }
+        if(!name || !mobile) { alert("Name & Mobile required!"); return; }
         
-        status.innerText = "⏳ कृपया प्रतीक्षा करें (Processing)...";
+        status.innerText = "⏳ Uploading & Submitting...";
         
-        const data = {
-            formType: currentType,
-            appNo: "ID-" + Math.floor(Math.random() * 10000),
-            name: name,
-            father: document.getElementById('father').value,
-            mobile: mobile,
-            email: document.getElementById('email').value,
-            address: document.getElementById('address').value,
-            extra1: document.getElementById('extra1') ? document.getElementById('extra1').value : "",
-            extra2: document.getElementById('extra2') ? document.getElementById('extra2').value : ""
-        };
+        try {
+            // फोटो और डॉक्युमेंट कलेक्ट करना
+            const photoFile = document.getElementById('photoApp').files[0];
+            const docFile = document.getElementById('docMain').files[0];
+            
+            const photoBase64 = photoFile ? await toBase64(photoFile) : "";
+            const docBase64 = docFile ? await toBase64(docFile) : "";
 
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            body: JSON.stringify(data)
-        }).then(() => {
-            alert("✅ बधाई हो! आपका फॉर्म जमा हो गया है।");
+            const data = {
+                formType: currentType,
+                appNo: "ID-" + Math.floor(Math.random() * 10000),
+                name: name,
+                father: document.getElementById('father').value,
+                mobile: mobile,
+                email: document.getElementById('email').value,
+                address: document.getElementById('address').value,
+                extra1: document.getElementById('extra1') ? document.getElementById('extra1').value : "",
+                extra2: document.getElementById('extra2') ? document.getElementById('extra2').value : "",
+                photo: photoBase64,
+                document: docBase64
+            };
+
+            await fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify(data)
+            });
+
+            alert("✅ Success! आपका फॉर्म जमा हो गया है।");
             location.reload();
-        }).catch(err => {
-            alert("❌ Error: " + err);
-            status.innerText = "Error, Try Again.";
-        });
+
+        } catch (error) {
+            alert("❌ Error: " + error);
+            status.innerText = "Error. Please try again.";
+        }
     }
 </script>
 </body>
