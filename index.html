@@ -49,7 +49,7 @@
 </div>
 
 <script>
-    // ✅ आपकी लिंक यहाँ डाल दी गई है
+    // ✅ मैंने आपकी सही लिंक यहाँ डाल दी है
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHuWRxybIS1_U1i3pVURdfv4si1BVBVOgAG9PzAZ3AIAu5AX_3slsCIUnNKu4nAQm8Fw/exec"; 
 
     let currentType = "";
@@ -61,4 +61,50 @@
         document.getElementById('form-title').innerText = type + " Form";
         
         let extraHTML = "";
-        if(type === 'Student') extraHTML = `<label>Select Course:</label><select id="extra1"><option>DEHM</option
+        if(type === 'Student') extraHTML = `<label>Select Course:</label><select id="extra1"><option>DEHM</option><option>BEMS</option><option>MDEH</option><option>CMS & ED</option></select>`;
+        
+        if(type === 'Institute') extraHTML = `<label>Institute Name:</label><input type="text" id="extra1"><label>Principal Name:</label><input type="text" id="extra2">`;
+        
+        if(type === 'Practitioner') extraHTML = `<label>Course Name (e.g. DEHM):</label><input type="text" id="extra1">`;
+        
+        if(type === 'Dealer') extraHTML = `<label>Shop/Firm Name:</label><input type="text" id="extra1"><label>GST Number:</label><input type="text" id="extra2">`;
+        
+        document.getElementById('extra-fields').innerHTML = extraHTML;
+    }
+
+    function submitData() {
+        const name = document.getElementById('name').value;
+        const mobile = document.getElementById('mobile').value;
+        const status = document.getElementById('status');
+
+        if(!name || !mobile) { alert("कृपया नाम और मोबाइल नंबर भरें!"); return; }
+        
+        status.innerText = "⏳ कृपया प्रतीक्षा करें (Processing)...";
+        
+        const data = {
+            formType: currentType,
+            appNo: "ID-" + Math.floor(Math.random() * 10000),
+            name: name,
+            father: document.getElementById('father').value,
+            mobile: mobile,
+            email: document.getElementById('email').value,
+            address: document.getElementById('address').value,
+            extra1: document.getElementById('extra1') ? document.getElementById('extra1').value : "",
+            extra2: document.getElementById('extra2') ? document.getElementById('extra2').value : ""
+        };
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: JSON.stringify(data)
+        }).then(() => {
+            alert("✅ बधाई हो! आपका फॉर्म जमा हो गया है।");
+            location.reload();
+        }).catch(err => {
+            alert("❌ Error: " + err);
+            status.innerText = "Error, Try Again.";
+        });
+    }
+</script>
+</body>
+</html>
