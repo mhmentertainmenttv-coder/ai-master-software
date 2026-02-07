@@ -7,53 +7,37 @@
     <style>
         body { font-family: sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
         
-        /* Login Screen Design */
         #login-screen { display: flex; justify-content: center; align-items: center; height: 100vh; background: #004d40; }
-        .login-box { background: white; padding: 30px; border-radius: 10px; width: 320px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .login-box h2 { color: #004d40; margin-bottom: 20px; }
+        .login-box { background: white; padding: 30px; border-radius: 10px; width: 300px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .login-box select, .login-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .login-box button { width: 100%; padding: 12px; background: #004d40; color: white; border: none; font-size: 16px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .login-box button:hover { background: #00332a; }
+        .login-box button { width: 100%; padding: 12px; background: #004d40; color: white; border: none; font-size: 16px; border-radius: 5px; cursor: pointer; }
 
-        /* Dashboard Design */
-        #dashboard { display: none; padding: 20px; max-width: 1200px; margin: auto; }
-        .header { background: white; padding: 15px 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; color: white; margin-left: 5px; font-size: 14px; text-decoration: none; display: inline-block; }
+        #dashboard { display: none; padding: 15px; }
+        .header { background: white; padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .btn { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; color: white; margin-left: 5px; text-decoration: none; }
         
-        /* Button Colors */
         .btn-call { background: #0288d1; }  
         .btn-wa { background: #25d366; }    
         .btn-cert { background: #ff9800; }  
         .btn-logout { background: #d32f2f; } 
         
-        /* Search & Filter Bar */
-        .filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .filters input, .filters select { padding: 10px; flex: 1; border: 1px solid #ddd; border-radius: 5px; min-width: 150px; }
+        .filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filters input, .filters select { padding: 10px; flex: 1; border: 1px solid #ccc; border-radius: 5px; }
 
-        /* Card Container */
-        .card-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        
-        /* Individual Card */
-        .data-card { background: white; padding: 20px; border-radius: 10px; border-top: 5px solid #004d40; box-shadow: 0 3px 6px rgba(0,0,0,0.1); position: relative; transition: transform 0.2s; }
-        .data-card:hover { transform: translateY(-3px); }
-        
+        .card-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; }
+        .data-card { background: white; padding: 15px; border-radius: 10px; border-top: 5px solid #004d40; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; }
         .photo-box { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; position: absolute; top: 15px; right: 15px; border: 2px solid #eee; }
         
-        .data-card h3 { margin: 0 0 5px 0; color: #333; font-size: 18px; padding-right: 60px; }
-        .badge { background: #e0f2f1; color: #004d40; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
-        .data-card p { margin: 5px 0; font-size: 14px; color: #555; line-height: 1.4; }
-        
-        .action-bar { margin-top: 15px; display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid #eee; padding-top: 15px; }
-        .action-bar a, .action-bar button { flex: 1; text-align: center; font-size: 13px; }
+        .action-bar { margin-top: 15px; display: flex; gap: 5px; flex-wrap: wrap; border-top: 1px solid #eee; padding-top: 10px; }
+        .action-bar a, .action-bar button { flex: 1; text-align: center; }
 
-        /* Certificate Design (Hidden) */
         #cert-print { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; text-align: center; overflow-y: auto; }
-        .cert-border { border: 10px double #004d40; padding: 40px; max-width: 800px; margin: 20px auto; background: #fff; position: relative; min-height: 90vh; box-sizing: border-box; }
+        .cert-border { border: 10px double #004d40; padding: 40px; max-width: 800px; margin: 20px auto; background: #fff; position: relative; }
         
         @media print {
             body * { visibility: hidden; }
             #cert-print, #cert-print * { visibility: visible; }
-            #cert-print { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+            #cert-print { position: absolute; left: 0; top: 0; width: 100%; }
             .no-print { display: none; }
         }
     </style>
@@ -63,12 +47,11 @@
     <div id="login-screen">
         <div class="login-box">
             <h2 style="color:#004d40;">🔐 TWER Admin</h2>
-            <label style="display:block; text-align:left; font-weight:bold; font-size:12px; color:#555;">Select Role:</label>
             <select id="role">
-                <option value="Admin">Master Admin (Full Access)</option>
-                <option value="SubAdmin">Sub Admin (Staff View)</option>
+                <option value="Admin">Master Admin</option>
+                <option value="SubAdmin">Sub Admin</option>
             </select>
-            <input type="password" id="password" placeholder="Enter Password">
+            <input type="password" id="password" placeholder="Password">
             <button onclick="handleLogin()">Login Dashboard</button>
         </div>
     </div>
@@ -76,17 +59,16 @@
     <div id="dashboard">
         <div class="header">
             <div>
-                <h2 style="margin:0; color:#004d40;">Admin Dashboard</h2>
-                <span id="user-display" style="font-size:14px; color:gray;">Checking login...</span>
+                <h3 style="margin:0; color:#004d40;">Admin Panel</h3>
+                <small id="user-display" style="color:gray;">--</small>
             </div>
             <div>
-                <button class="btn" style="background:green;" onclick="location.href='https://docs.google.com/spreadsheets'">📄 Google Sheet</button>
                 <button class="btn btn-logout" onclick="logout()">Logout</button>
             </div>
         </div>
 
         <div class="filters">
-            <input type="text" id="search" placeholder="🔍 Search by Name or Mobile..." onkeyup="filterData()">
+            <input type="text" id="search" placeholder="🔍 Search Name/Mobile..." onkeyup="filterData()">
             <select id="filterType" onchange="filterData()">
                 <option value="All">All Categories</option>
                 <option value="Student">Student</option>
@@ -94,48 +76,43 @@
                 <option value="Practitioner">Practitioner</option>
                 <option value="Dealer">Dealer</option>
             </select>
-            <button class="btn" style="background:#333;" onclick="loadData()">🔄 Refresh Data</button>
+            <button class="btn" style="background:#333;" onclick="loadData()">🔄 Refresh</button>
         </div>
 
-        <div id="loading" style="text-align:center; display:none; padding:20px;">
-            <p style="font-size:18px; color:#004d40; font-weight:bold;">⏳ डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</p>
-        </div>
-        
+        <p id="total-count" style="text-align:center; font-weight:bold; color:#004d40;"></p>
+        <div id="loading" style="text-align:center; display:none;">⏳ Loading Data...</div>
         <div id="data-container" class="card-container"></div>
     </div>
 
     <div id="cert-print">
         <div class="cert-border">
-            <h1 style="color:#004d40; font-size:42px; margin-bottom:5px; font-family:serif;">CERTIFICATE OF REGISTRATION</h1>
-            <h3 style="margin-top:0; font-size:24px; color:#333;">THE WORLD EDUCATION RESEARCH (TWER)</h3>
-            <p style="font-size:16px; color:#555;">Electro Homeopathic Board & Council, Patna</p>
-            <hr style="width:70%; border-top:3px solid #004d40; margin: 20px auto;">
-            <br><br>
-            <p style="font-size:22px; font-style: italic;">This is to certify that</p>
-            <h1 id="c-name" style="color:#d32f2f; font-family:cursive; font-size:48px; margin:15px 0;">Student Name</h1>
-            <p style="font-size:20px;">Son/Daughter of <b id="c-father">Father Name</b></p>
-            <p style="font-size:20px;">Has been successfully registered for the course/category:</p>
-            <h2 id="c-type" style="text-decoration: underline; color:#004d40;">Course Name</h2>
-            <br><br>
-            <div style="display:flex; justify-content:space-between; margin-top:40px; padding:0 60px;">
-                <p style="font-size:18px;"><b>Reg No:</b> <span id="c-id">ID-0000</span></p>
-                <p style="font-size:18px;"><b>Date:</b> <span id="c-date">01/01/2026</span></p>
+            <h1 style="color:#004d40; font-family:serif;">CERTIFICATE OF REGISTRATION</h1>
+            <h3>THE WORLD EDUCATION RESEARCH (TWER)</h3>
+            <p>Electro Homeopathic Board, Patna</p>
+            <hr style="width:70%; margin:20px auto;">
+            <br>
+            <p>This is to certify that</p>
+            <h1 id="c-name" style="color:#d32f2f; font-family:cursive;">Name</h1>
+            <p>Son/Daughter of <b id="c-father">Father</b></p>
+            <p>Has been registered for <b id="c-type">Course</b></p>
+            <br>
+            <div style="display:flex; justify-content:space-between; padding:0 50px;">
+                <p><b>Reg No:</b> <span id="c-id">ID</span></p>
+                <p><b>Date:</b> <span id="c-date">Date</span></p>
             </div>
-            <br><br><br><br>
-            <div style="display:flex; justify-content:space-between; padding:0 60px;">
-                <div style="text-align:center;"><b>______________________</b><br>Secretary Signature</div>
-                <div style="text-align:center;"><b>______________________</b><br>President Signature</div>
+            <br><br><br>
+            <div style="display:flex; justify-content:space-between; padding:0 50px;">
+                <b>__________<br>Secretary</b>
+                <b>__________<br>President</b>
             </div>
             <br><br>
-            <div class="no-print" style="margin-top:30px;">
-                <button onclick="window.print()" style="padding:15px 30px; background:blue; color:white; border:none; cursor:pointer; font-size:18px; border-radius:5px; margin-right:10px;">🖨️ Print / Save PDF</button>
-                <button onclick="closeCert()" style="padding:15px 30px; background:red; color:white; border:none; cursor:pointer; font-size:18px; border-radius:5px;">❌ Close</button>
-            </div>
+            <button onclick="window.print()" class="no-print btn btn-call">🖨️ Print</button>
+            <button onclick="closeCert()" class="no-print btn btn-logout">❌ Close</button>
         </div>
     </div>
 
 <script>
-    // ✅ आपकी नई लिंक यहाँ अपडेट कर दी गई है
+    // ✅ आपकी लिंक यहाँ लगा दी गई है
     const API_URL = "https://script.google.com/macros/s/AKfycbyvhiyDv1m_7wEDwfxapaymNel3xSy4qB3ArYT7HrbJKWdcsO_LBXYceNU64xI8lFAp/exec"; 
 
     let allData = [];
@@ -144,26 +121,15 @@
     function handleLogin() {
         const role = document.getElementById('role').value;
         const pass = document.getElementById('password').value;
-
-        // 🟢 MASTER ADMIN
-        if (role === "Admin" && pass === "1979") {
-            userRole = "Master Admin";
-            loginSuccess();
-        } 
-        // 🟡 SUB ADMIN / STAFF
-        else if (role === "SubAdmin" && pass === "1234") {
-            userRole = "Sub Admin";
-            loginSuccess();
+        if ((role === "Admin" && pass === "1979") || (role === "SubAdmin" && pass === "1234")) {
+            userRole = role;
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('user-display').innerText = "Logged in: " + userRole;
+            loadData();
         } else {
-            alert("❌ गलत पासवर्ड! कृपया दोबारा प्रयास करें।");
+            alert("❌ Wrong Password!");
         }
-    }
-
-    function loginSuccess() {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('user-display').innerText = "Logged in as: " + userRole;
-        loadData();
     }
 
     function logout() { location.reload(); }
@@ -177,11 +143,11 @@
         .then(data => {
             allData = data;
             document.getElementById('loading').style.display = 'none';
+            document.getElementById('total-count').innerText = "Total Records: " + data.length;
             renderData(data);
         })
         .catch(err => {
-            document.getElementById('loading').innerHTML = "<p style='color:red;'>Failed to load data. Please check internet or script link.</p>";
-            console.error(err);
+            document.getElementById('loading').innerHTML = "Error loading data. Check internet.";
         });
     }
 
@@ -190,41 +156,28 @@
         container.innerHTML = "";
 
         if(data.length === 0) {
-            container.innerHTML = "<p style='text-align:center; width:100%;'>No Records Found.</p>";
-            return;
+            container.innerHTML = "<p>No Data Found.</p>"; return;
         }
 
-        // नए रिकॉर्ड सबसे पहले दिखाएं (Reverse order)
+        // Reverse to show newest first
         data.slice().reverse().forEach(item => {
-            
-            // सर्टिफिकेट बटन सिर्फ Master Admin को दिखेगा
-            let certBtn = "";
-            if (userRole === "Master Admin") {
-                certBtn = `<button class="btn btn-cert" onclick="generateCert('${item.name}', '${item.father}', '${item.course || item.type}', '${item.appNo}')">📜 Certificate</button>`;
-            }
+            let certBtn = (userRole === "Admin") ? `<button class="btn btn-cert" onclick="generateCert('${item.name}', '${item.father}', '${item.course || item.type}', '${item.appNo}')">📜 Cert</button>` : "";
+            let photoHTML = item.photo ? `<img src="${item.photo}" class="photo-box">` : '';
 
-            let photoHTML = item.photo ? `<img src="${item.photo}" class="photo-box" onclick="window.open('${item.photo}')">` : '';
-            
-            // डेटा कार्ड
             let card = `
                 <div class="data-card">
                     ${photoHTML}
-                    <h3 style="margin-top:0;">${item.name}</h3>
-                    <span class="badge">${item.type}</span>
-                    
-                    <p><b>📞 Mobile:</b> ${item.mobile}</p>
-                    <p><b>🆔 ID:</b> ${item.appNo}</p>
-                    <p><b>👨‍👦 Father:</b> ${item.father}</p>
-                    <p><b>📚 Info:</b> ${item.course || 'N/A'}</p>
-                    <p><b>📅 Date:</b> ${new Date(item.date).toLocaleDateString()}</p>
-                    
+                    <h3 style="margin-right:60px;">${item.name}</h3>
+                    <span style="background:#eee; padding:2px 5px; font-size:12px;">${item.type}</span>
+                    <p><b>ID:</b> ${item.appNo}</p>
+                    <p><b>Father:</b> ${item.father}</p>
+                    <p><b>Date:</b> ${new Date(item.date).toLocaleDateString()}</p>
                     <div class="action-bar">
                         <a href="tel:${item.mobile}" class="btn btn-call">📞 Call</a>
-                        <a href="https://wa.me/91${item.mobile}?text=Namaste ${item.name}, TWER Board contacting you regarding your application." target="_blank" class="btn btn-wa">💬 WhatsApp</a>
+                        <a href="https://wa.me/91${item.mobile}?text=Namaste ${item.name}..." target="_blank" class="btn btn-wa">💬 WhatsApp</a>
                         ${certBtn}
                     </div>
-                </div>
-            `;
+                </div>`;
             container.innerHTML += card;
         });
     }
@@ -232,29 +185,21 @@
     function filterData() {
         const search = document.getElementById('search').value.toLowerCase();
         const type = document.getElementById('filterType').value;
-
         const filtered = allData.filter(item => {
-            const matchesSearch = String(item.name).toLowerCase().includes(search) || String(item.mobile).includes(search) || String(item.appNo).toLowerCase().includes(search);
-            const matchesType = type === "All" || item.type === type;
-            return matchesSearch && matchesType;
+            return (String(item.name).toLowerCase().includes(search) || String(item.mobile).includes(search)) && (type === "All" || item.type === type);
         });
         renderData(filtered);
     }
 
-    // सर्टिफिकेट जनरेटर
-    function generateCert(name, father, type, id) {
-        document.getElementById('c-name').innerText = name;
-        document.getElementById('c-father').innerText = father;
-        document.getElementById('c-type').innerText = type;
-        document.getElementById('c-id').innerText = id;
+    function generateCert(n, f, t, i) {
+        document.getElementById('c-name').innerText = n;
+        document.getElementById('c-father').innerText = f;
+        document.getElementById('c-type').innerText = t;
+        document.getElementById('c-id').innerText = i;
         document.getElementById('c-date').innerText = new Date().toLocaleDateString();
-        
         document.getElementById('cert-print').style.display = 'block';
     }
-
-    function closeCert() {
-        document.getElementById('cert-print').style.display = 'none';
-    }
+    function closeCert() { document.getElementById('cert-print').style.display = 'none'; }
 </script>
 </body>
 </html>
