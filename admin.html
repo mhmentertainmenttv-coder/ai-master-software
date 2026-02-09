@@ -17,8 +17,7 @@
         .login-box h3 { color: #004d40; margin: 5px 0 20px 0; }
         .login-box input, .login-box select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         .login-box button { width: 100%; padding: 12px; background: #004d40; color: white; border: none; font-size: 16px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-weight: bold; transition: 0.3s; }
-        .login-box button:hover { background: #00695c; }
-
+        
         /* --- DASHBOARD --- */
         #dashboard { display: none; padding: 20px; max-width: 1400px; margin: auto; }
         .header { background: white; padding: 15px 25px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; border-bottom: 5px solid #004d40; }
@@ -29,15 +28,19 @@
         .action-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 10px; }
         .btn { padding: 6px; border: none; border-radius: 4px; color: white; font-size: 11px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 3px; font-weight: bold; text-decoration: none; }
         
-        /* Button Colors */
         .btn-icard { background: #8e24aa; } .btn-admit { background: #f57c00; } .btn-cert { background: #d32f2f; }
         .btn-reg { background: #00897b; } .btn-res { background: #1565c0; } .btn-call { background: #0277bd; } .btn-wa { background: #2e7d32; }
+        .btn-approve { background: #004d40; grid-column: span 3; font-size: 13px; color: white; padding: 8px; }
 
         /* Cards */
         .card-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
         .data-card { background: white; padding: 20px; border-radius: 12px; border-left: 6px solid #004d40; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; transition: transform 0.2s; }
         .data-card:hover { transform: translateY(-5px); }
         .photo-box { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; position: absolute; top: 15px; right: 15px; border: 3px solid #e0f2f1; }
+        
+        .status-badge { font-size: 12px; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
+        .status-pending { background: #fff3e0; color: #e65100; }
+        .status-approved { background: #e8f5e9; color: #2e7d32; }
 
         /* --- PRINT MODALS --- */
         .print-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; }
@@ -45,17 +48,15 @@
         .ctrl-btn { padding: 10px 25px; margin: 0 10px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; color: white; transition: 0.3s; }
         .btn-p { background: #2e7d32; } .btn-c { background: #c62828; }
 
-        /* --- DOCUMENT DESIGNS --- */
-        
         /* 1. I-CARD */
-        .icard-box { width: 320px; height: 490px; border: 1px solid #ccc; margin: 70px auto; background: url('https://www.transparenttextures.com/patterns/cubes.png'); text-align: center; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; }
+        .icard-box { width: 320px; height: 490px; border: 1px solid #ccc; margin: 70px auto; background: url('https://www.transparenttextures.com/patterns/cubes.png'); text-align: center; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         
         /* 2. ADMIT CARD */
         .admit-box { width: 750px; border: 2px solid #000; margin: 70px auto; padding: 30px; background: white; text-align: left; }
         .admit-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         .admit-table th, .admit-table td { border: 1px solid #000; padding: 10px; text-align: center; }
 
-        /* 3. CERTIFICATE (ROYAL BORDER) */
+        /* 3. CERTIFICATE (ROYAL BORDER - UNTOUCHED) */
         .cert-box {
             width: 900px; height: 640px; padding: 40px; margin: 70px auto; text-align: center; position: relative;
             background-color: #fffbec;
@@ -72,21 +73,14 @@
         /* 5. MARKSHEET */
         .result-box { width: 800px; border: 5px double #333; margin: 70px auto; padding: 40px; text-align: center; background: white; }
 
-        /* 6. DOCTOR DESK */
-        .doctor-box { width: 850px; margin: 70px auto; background: white; padding: 30px; box-shadow: 0 0 20px rgba(0,0,0,0.1); min-height: 1000px; }
-        .rx-grid { display: grid; grid-template-columns: 200px 1fr; gap: 20px; margin-top: 20px; }
-        .rx-sidebar { border-right: 2px solid #eee; padding-right: 15px; }
-
-        /* QR & Barcode Styles */
-        .qr-code { width: 90px; height: 90px; position: absolute; }
-        .barcode { font-family: 'Libre Barcode 39 Text', cursive; font-size: 30px; position: absolute; }
+        /* BARCODE & QR */
+        .barcode { font-family: 'Libre Barcode 39 Text', cursive; font-size: 35px; margin-top: 10px; }
+        .qr-code { width: 90px; height: 90px; }
 
         @media print {
-            body * { visibility: hidden; }
-            /* This ensures ONLY the open modal prints */
-            .print-modal[style*="block"], .print-modal[style*="block"] * { visibility: visible; }
-            .print-modal[style*="block"] { position: absolute; left: 0; top: 0; width: 100%; margin: 0; box-shadow: none; }
-            .print-controls, .no-print { display: none !important; }
+            .no-print, .print-controls, #dashboard, #login-screen { display: none !important; }
+            .print-modal { position: absolute; display: block !important; top: 0; left: 0; }
+            .cert-box, .result-box, .admit-box, .reg-card-box { margin: 0; box-shadow: none; width: 100%; }
         }
     </style>
 </head>
@@ -94,7 +88,7 @@
 
     <div id="login-screen">
         <div class="login-box">
-            <img src="1000245887.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+            <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
             <h3>TWER ADMIN PANEL</h3>
             <select id="role">
                 <option value="Admin">Master Admin</option>
@@ -108,103 +102,62 @@
     <div id="dashboard">
         <div class="header">
             <div class="logo-section">
-                <img src="1000245887.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
                 <div><h2 style="margin:0; color:#004d40;">TWER ERP</h2><small>Reg No: BR/2022/0321381</small></div>
             </div>
             <div style="display:flex; gap:10px;">
-                <button class="btn btn-icard" style="padding:10px 20px; font-size:14px;" onclick="openDoctorDesk()">🩺 Doctor Desk</button>
-                <button class="btn btn-cert" style="padding:10px 20px; font-size:14px;" onclick="location.reload()">Logout</button>
+                <button class="btn btn-cert" style="padding:10px 20px; font-size:14px; background:#333;" onclick="location.reload()">Logout</button>
             </div>
         </div>
 
-        <input type="text" id="search" placeholder="🔍 Search Student Name, ID or Mobile..." onkeyup="searchData()" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #ccc; border-radius:5px;">
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <input type="text" id="search" placeholder="🔍 Search Student Name, ID..." onkeyup="searchData()" style="width:100%; padding:12px; border:1px solid #ccc; border-radius:5px;">
+            <button class="btn btn-approve" style="width:auto; padding:0 20px;" onclick="approveAll()">✅ Approve All</button>
+        </div>
+
         <div id="loading" style="text-align:center;">⏳ Loading Data...</div>
         <div id="data-container" class="card-container"></div>
     </div>
 
-    <div id="doctor-view" class="print-modal">
-        <div class="print-controls no-print">
-            <button class="ctrl-btn btn-p" onclick="window.print()">🖨️ Print Rx</button>
-            <button class="ctrl-btn btn-c" onclick="closeModal('doctor-view')">❌ Close</button>
-        </div>
-        <div class="doctor-box">
-            <div style="border-bottom:3px solid #004d40; padding-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                <img src="1000245887.jpg" style="height:100px;">
-                <div style="text-align:right; color:#004d40;">
-                    <h2 style="margin:0;">Dr. Mithilesh Choubey</h2>
-                    <p style="margin:0;">M.D.E.H (Electro Homeopathy)</p>
-                    <p style="margin:0;">Reg No: BR/2022/0321381</p>
-                    <p style="margin:0;">Patna, Bihar</p>
-                </div>
-            </div>
-
-            <div class="no-print" style="background:#f5f5f5; padding:15px; margin-top:15px; border-radius:8px;">
-                <h4>📝 Patient Entry & Medicine Selector</h4>
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    <input type="text" id="rx-name" placeholder="Patient Name" style="padding:8px; flex:2;">
-                    <input type="text" id="rx-age" placeholder="Age/Sex" style="padding:8px; flex:1;">
-                    <input type="date" id="rx-date" style="padding:8px;">
-                </div>
-                
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    <input list="med-list-data" id="rx-med-input" placeholder="🔍 Search Medicine (e.g. S1)" style="padding:8px; flex:2;">
-                    <datalist id="med-list-data">
-                        <option value="Scrofuloso-1 (S1)">Metabolism</option>
-                        <option value="Lymfatico-1 (L1)">Lymphatic</option>
-                        <option value="Angioitico-1 (A1)">Heart</option>
-                        <option value="Pectorale-1 (P1)">Respiratory</option>
-                        <option value="Canceroso-1 (C1)">Tissues</option>
-                        <option value="Vermifugo-1 (Ver1)">Worms</option>
-                        <option value="Venereo-1 (Ven1)">Constitutional</option>
-                        <option value="White Electricity (WE)">Neutral</option>
-                        <option value="Blue Electricity (BE)">Hemorrhage</option>
-                        <option value="Red Electricity (RE)">Stimulant</option>
-                        <option value="Green Electricity (GE)">Pain</option>
-                        <option value="Yellow Electricity (YE)">Nerves</option>
-                    </datalist>
-                    <input type="text" id="rx-dose" placeholder="Dose (e.g. D3, 10 drops)" style="padding:8px; flex:1;">
-                    <button class="btn btn-res" onclick="addMed()" style="padding:8px;">Add</button>
-                </div>
-                
-                <textarea id="rx-symp" placeholder="Symptoms..." style="width:100%; height:50px; padding:5px;"></textarea>
-                <div style="margin-top:10px;">
-                    <button class="btn btn-reg" onclick="document.getElementById('file-upload').click()">📂 Open Reference PDF</button>
-                    <input type="file" id="file-upload" accept="application/pdf" style="display:none;" onchange="alert('PDF Ready to View')">
-                </div>
-                <button class="btn btn-admit" onclick="updateRxView()" style="width:100%; margin-top:10px; padding:10px;">Generate View</button>
-            </div>
-
-            <div style="background:#e0f2f1; padding:10px; margin-top:20px; font-weight:bold; display:flex; justify-content:space-between;">
-                <span id="v-name">Patient: </span><span id="v-age">Age: </span><span id="v-date">Date: </span>
+    <div id="cert-view" class="print-modal">
+        <div class="print-controls"><button class="ctrl-btn btn-p" onclick="window.print()">Print Cert</button><button class="ctrl-btn btn-c" onclick="closeModal('cert-view')">Close</button></div>
+        <div class="cert-box royal-border">
+            <img src="logo.png" style="height:100px;">
+            <h2 style="color:#004d40; font-family:'Playfair Display'; font-size:36px; margin:10px 0;">CERTIFICATE OF REGISTRATION</h2>
+            <h3 style="margin:0;">THE WORLD EDUCATION RESEARCH</h3>
+            <p>Electro Homeopathic Board, Patna</p>
+            <hr style="width:70%; margin:20px auto; border-top:2px solid #004d40;">
+            <p style="font-size:18px;">This is to certify that</p>
+            <h1 id="c-name" style="color:#d32f2f; font-family:'Playfair Display'; font-size:48px; margin:15px 0;">Name</h1>
+            <p style="font-size:18px;">Son/Daughter of <b id="c-father">Father</b></p>
+            <p style="font-size:18px;">Has been registered for <b id="c-type">Course</b></p>
+            <br>
+            <div style="display:flex; justify-content:space-between; padding:0 60px;">
+                <p><b>Reg No:</b> <span id="c-id">ID</span></p><p><b>Date:</b> <span id="c-date">Date</span></p>
             </div>
             
-            <div class="rx-grid">
-                <div class="rx-sidebar">
-                    <h4>Clinical Notes:</h4>
-                    <p id="v-symp" style="white-space:pre-wrap;"></p>
-                    <br><h4>Vitals:</h4>
-                    <p>BP: ____/____</p><p>Pulse: ____</p><p>Weight: ____</p>
-                </div>
-                <div>
-                    <h3>Rx</h3>
-                    <ul id="med-list" style="list-style:none; padding:0; line-height:2.2; font-size:16px;"></ul>
-                    <br><br>
-                    <h4>Diet / Instructions (परहेज):</h4>
-                    <p contenteditable="true">1. Take medicine with lukewarm water.</p>
-                    <p contenteditable="true">2. Avoid spicy, sour, and oily food.</p>
-                </div>
+            <div style="position:absolute; bottom:140px; width:100%; display:flex; justify-content:space-between; padding:0 80px; box-sizing:border-box;">
+                <div class="barcode" id="c-barcode"></div>
+                <img id="c-qr" class="qr-code">
             </div>
-            <div style="border-top:2px solid #004d40; padding-top:10px; margin-top:50px; text-align:center; font-size:12px;">
-                Address: Front of CNLU, Mithapur, Patna - 800001 | Web: www.werbharat.com
+
+            <div style="position:absolute; bottom:60px; width:100%; display:flex; justify-content:space-between; padding:0 60px; box-sizing:border-box;">
+                <b>__________________<br>Secretary</b>
+                <b>__________________<br>President</b>
+            </div>
+
+            <div style="position:absolute; bottom:10px; width:100%; text-align:center; font-size:11px; color:#333; padding-bottom:5px;">
+                <p style="margin:0; font-weight:bold;">Note: This certificate is verified & approved by TWER Board.</p>
+                <p style="margin:2px 0;"><b>Address:</b> Front of Chanakya National Law University, Mithapur Old Bus Stand Road, Patna</p>
             </div>
         </div>
     </div>
 
     <div id="icard-view" class="print-modal">
-        <div class="print-controls"><button class="ctrl-btn btn-p" onclick="window.print()">Print</button><button class="ctrl-btn btn-c" onclick="closeModal('icard-view')">Close</button></div>
+        <div class="print-controls"><button class="ctrl-btn btn-p" onclick="window.print()">Print I-Card</button><button class="ctrl-btn btn-c" onclick="closeModal('icard-view')">Close</button></div>
         <div class="icard-box">
             <div style="background:#004d40; color:white; padding:15px;">
-                <img src="1000245887.jpg" style="height:40px; float:left;">
+                <img src="logo.png" style="height:40px; float:left;">
                 <h3 style="margin:0;">TWER</h3><small>Identity Card</small>
             </div>
             <img id="i-photo" style="width:110px; height:110px; border-radius:50%; border:4px solid white; object-fit:cover; margin-top:-55px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
@@ -214,17 +167,17 @@
                 <p><b>Course:</b> <span id="i-course">Course</span></p>
                 <p><b>DOB:</b> <span id="i-dob">--</span></p>
                 <p><b>Mobile:</b> <span id="i-mobile">Mobile</span></p>
-                <div id="i-barcode" class="barcode" style="position:relative; bottom:0; width:100%; font-size:24px; margin-top:5px;"></div>
+                <div class="barcode" id="i-barcode" style="font-size:24px;"></div>
             </div>
             <div style="background:#004d40; color:white; padding:8px; position:absolute; bottom:0; width:100%;">Reg: BR/2022/0321381</div>
         </div>
     </div>
 
     <div id="admit-view" class="print-modal">
-        <div class="print-controls"><button class="ctrl-btn btn-p" onclick="window.print()">Print</button><button class="ctrl-btn btn-c" onclick="closeModal('admit-view')">Close</button></div>
+        <div class="print-controls"><button class="ctrl-btn btn-p" onclick="window.print()">Print Admit</button><button class="ctrl-btn btn-c" onclick="closeModal('admit-view')">Close</button></div>
         <div class="admit-box">
             <div style="text-align:center; border-bottom:2px solid black; padding-bottom:10px;">
-                <img src="1000245887.jpg" style="height:70px; float:left;">
+                <img src="logo.png" style="height:70px; float:left;">
                 <h1 style="margin:0;">ADMIT CARD</h1>
                 <h3 style="margin:5px 0;">THE WORLD EDUCATION RESEARCH</h3>
             </div>
@@ -248,33 +201,11 @@
         </div>
     </div>
 
-    <div id="cert-view" class="print-modal">
-        <div class="print-controls"><button class="ctrl-btn btn-p" onclick="window.print()">Print</button><button class="ctrl-btn btn-c" onclick="closeModal('cert-view')">Close</button></div>
-        <div class="cert-box">
-            <img src="1000245887.jpg" style="height:100px;">
-            <h2 style="color:#004d40; font-family:'Playfair Display'; font-size:36px; margin:10px 0;">CERTIFICATE OF REGISTRATION</h2>
-            <h3 style="margin:0;">THE WORLD EDUCATION RESEARCH</h3>
-            <p>Electro Homeopathic Board, Patna</p>
-            <hr style="width:70%; margin:20px auto; border-top:2px solid #004d40;">
-            <p style="font-size:18px;">This is to certify that</p>
-            <h1 id="c-name" style="color:#d32f2f; font-family:'Playfair Display'; font-size:48px; margin:15px 0;">Name</h1>
-            <p style="font-size:18px;">Son/Daughter of <b id="c-father">Father</b></p>
-            <p style="font-size:18px;">Has been registered for <b id="c-type">Course</b></p>
-            <br>
-            <div style="display:flex; justify-content:space-between; padding:0 60px;">
-                <p><b>Reg No:</b> <span id="c-id">ID</span></p><p><b>Date:</b> <span id="c-date">Date</span></p>
-            </div>
-            <br><br><br><div style="display:flex; justify-content:space-between; padding:0 60px;"><b>Secretary</b><b>President</b></div>
-            
-            <img id="c-qr" class="qr-code" style="right: 50px; bottom: 50px;">
-        </div>
-    </div>
-
     <div id="reg-view" class="print-modal">
-        <div class="print-controls"><button class="ctrl-btn btn-p" onclick="window.print()">Print</button><button class="ctrl-btn btn-c" onclick="closeModal('reg-view')">Close</button></div>
+        <div class="print-controls"><button class="ctrl-btn btn-p" onclick="window.print()">Print Reg Card</button><button class="ctrl-btn btn-c" onclick="closeModal('reg-view')">Close</button></div>
         <div class="reg-card-box">
             <div style="border-bottom:2px solid #004d40; text-align:center; padding-bottom:10px;">
-                <img src="1000245887.jpg" style="height:70px; float:left;">
+                <img src="logo.png" style="height:70px; float:left;">
                 <h2 style="margin:0; color:#004d40;">REGISTRATION CARD</h2>
                 <small>TWER - Electro Homeopathic Board</small>
             </div>
@@ -282,7 +213,7 @@
             <table class="reg-table" style="width:75%;">
                 <tr><td><b>Reg No:</b></td><td><span id="rc-id"></span></td></tr>
                 <tr><td><b>Name:</b></td><td><span id="rc-name"></span></td></tr>
-                <tr><td><b>Father:</b></td><td><span id="rc-father"></span></td></tr>
+                <tr><td><b>Father's Name:</b></td><td><span id="rc-father"></span></td></tr>
                 <tr><td><b>Course:</b></td><td><span id="rc-course"></span></td></tr>
                 <tr><td><b>Mobile:</b></td><td><span id="rc-mobile"></span></td></tr>
                 <tr><td><b>Issue Date:</b></td><td><span id="rc-date"></span></td></tr>
@@ -292,9 +223,9 @@
     </div>
 
     <div id="result-view" class="print-modal">
-        <div class="print-controls"><button class="ctrl-btn btn-p" onclick="window.print()">Print</button><button class="ctrl-btn btn-c" onclick="closeModal('result-view')">Close</button></div>
+        <div class="print-controls"><button class="ctrl-btn btn-p" onclick="window.print()">Print Marksheet</button><button class="ctrl-btn btn-c" onclick="closeModal('result-view')">Close</button></div>
         <div class="result-box">
-            <img src="1000245887.jpg" style="height:80px;">
+            <img src="logo.png" style="height:80px;">
             <h2>STATEMENT OF MARKS</h2>
             <p>The World Education Research (TWER)</p>
             <hr>
@@ -319,6 +250,7 @@
     let allData = [];
     let userRole = "";
 
+    // 1. LOGIN
     function handleLogin() {
         if ((document.getElementById('role').value === "Admin" && document.getElementById('password').value === "1979") || (document.getElementById('role').value === "SubAdmin" && document.getElementById('password').value === "1234")) {
             userRole = document.getElementById('role').value;
@@ -328,6 +260,7 @@
         } else { alert("❌ Incorrect Password"); }
     }
 
+    // 2. LOAD DATA
     function loadData() {
         document.getElementById('loading').style.display = 'block';
         fetch(API_URL).then(res => res.json()).then(data => {
@@ -337,38 +270,77 @@
         });
     }
 
+    // 3. RENDER DATA (WITH APPROVAL LOGIC)
     function renderData(data) {
         const con = document.getElementById('data-container');
         con.innerHTML = "";
         data.slice().reverse().forEach(item => {
-            let photo = item.photo ? `<img src="${item.photo}" class="photo-box">` : '';
             
-            // Buttons Logic
-            let buttons = `
-                <a href="tel:${item.mobile}" class="btn btn-call">📞 Call</a>
-                <a href="https://wa.me/91${item.mobile}" target="_blank" class="btn btn-wa">💬 Chat</a>
-            `;
+            // Check Approval (Simulated via LocalStorage)
+            let isApproved = localStorage.getItem("app_" + item.appNo) === "true";
+            
+            let statusBadge = isApproved 
+                ? `<span class="status-badge status-approved">✅ Approved</span>` 
+                : `<span class="status-badge status-pending">⏳ Pending</span>`;
+
+            let actionButtons = "";
 
             if (userRole === "Admin") {
-                buttons += `
-                    <button class="btn btn-icard" onclick="openICard('${item.name}','${item.course||item.type}','${item.appNo}','${item.photo}','${item.mobile}')">🆔 I-Card</button>
-                    <button class="btn btn-admit" onclick="openAdmit('${item.name}','${item.father}','${item.course||item.type}','${item.appNo}','${item.photo}')">📝 Admit</button>
-                    <button class="btn btn-cert" onclick="openCert('${item.name}','${item.father}','${item.course||item.type}','${item.appNo}','${item.date}')">📜 Cert</button>
-                    <button class="btn btn-reg" onclick="openRegCard('${item.name}','${item.father}','${item.course||item.type}','${item.appNo}','${item.mobile}','${item.date}','${item.photo}')">®️ Reg Card</button>
-                    <button class="btn btn-res" onclick="openResult('${item.name}','${item.father}','${item.course||item.type}','${item.appNo}')">📊 Marks</button>
+                // Admin sees EVERYTHING + Approve Button
+                let approveBtn = isApproved 
+                    ? `<button class="btn btn-approve" style="background:#333;" onclick="toggleApprove('${item.appNo}')">🚫 Revoke</button>`
+                    : `<button class="btn btn-approve" onclick="toggleApprove('${item.appNo}')">✅ Approve Admission</button>`;
+                
+                actionButtons = `
+                    ${approveBtn}
+                    <div class="action-bar">
+                        <button class="btn btn-icard" onclick="openICard('${item.name}','${item.course||item.type}','${item.appNo}','${item.photo}','${item.mobile}')">🆔 I-Card</button>
+                        <button class="btn btn-admit" onclick="openAdmit('${item.name}','${item.father}','${item.course||item.type}','${item.appNo}','${item.photo}')">📝 Admit</button>
+                        <button class="btn btn-cert" onclick="openCert('${item.name}','${item.father}','${item.course||item.type}','${item.appNo}','${item.date}')">📜 Cert</button>
+                        <button class="btn btn-res" onclick="openResult('${item.name}','${item.father}','${item.course||item.type}','${item.appNo}')">📊 Marks</button>
+                        <button class="btn btn-reg" onclick="openRegCard('${item.name}','${item.father}','${item.course||item.type}','${item.appNo}','${item.mobile}','${item.date}','${item.photo}')">®️ Reg</button>
+                    </div>
                 `;
+            } else {
+                // SubAdmin sees Buttons ONLY IF Approved
+                if (isApproved) {
+                    actionButtons = `
+                        <div class="action-bar">
+                            <button class="btn btn-icard" onclick="openICard('${item.name}','${item.course||item.type}','${item.appNo}','${item.photo}','${item.mobile}')">🆔 View I-Card</button>
+                            <button class="btn btn-cert" onclick="openCert('${item.name}','${item.father}','${item.course||item.type}','${item.appNo}','${item.date}')">📜 View Cert</button>
+                        </div>
+                    `;
+                } else {
+                    actionButtons = `<p style="text-align:center; color:red; font-size:12px; margin-top:10px;">Waiting for Admin Approval</p>`;
+                }
             }
 
+            let photo = item.photo ? `<img src="${item.photo}" class="photo-box">` : '';
             let card = `
                 <div class="data-card">
                     ${photo}
                     <h3 style="margin:0 0 5px 0; color:#004d40;">${item.name}</h3>
                     <p style="font-size:12px; color:gray;">${item.type}</p>
                     <p style="font-size:13px;"><b>ID:</b> ${item.appNo}</p>
-                    <div class="action-bar">${buttons}</div>
+                    ${statusBadge}
+                    ${actionButtons}
                 </div>`;
             con.innerHTML += card;
         });
+    }
+
+    // 4. APPROVAL LOGIC
+    function toggleApprove(id) {
+        let current = localStorage.getItem("app_" + id) === "true";
+        localStorage.setItem("app_" + id, !current); // Toggle Status
+        renderData(allData); // Refresh View
+    }
+
+    function approveAll() {
+        if(confirm("Approve ALL students for this device?")) {
+            allData.forEach(item => localStorage.setItem("app_" + item.appNo, "true"));
+            renderData(allData);
+        }
     }
 
     function searchData() {
@@ -378,7 +350,7 @@
 
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    // --- Generators with QR & Barcode Auto-Gen ---
+    // --- GENERATORS ---
     function openICard(n, c, i, p, m) {
         let dob = prompt("Enter DOB:", "");
         document.getElementById('i-name').innerText = n;
@@ -387,11 +359,9 @@
         document.getElementById('i-mobile').innerText = m;
         document.getElementById('i-dob').innerText = dob;
         document.getElementById('i-photo').src = p || "";
-        // Barcode Generation
         document.getElementById('i-barcode').innerText = "*" + i + "*";
         document.getElementById('icard-view').style.display = 'block';
     }
-    
     function openAdmit(n, f, c, i, p) {
         document.getElementById('a-name').innerText = n;
         document.getElementById('a-father').innerText = f;
@@ -400,19 +370,18 @@
         document.getElementById('a-photo').src = p || "";
         document.getElementById('admit-view').style.display = 'block';
     }
-    
     function openCert(n, f, t, i, d) {
         document.getElementById('c-name').innerText = n;
         document.getElementById('c-father').innerText = f;
         document.getElementById('c-type').innerText = t;
         document.getElementById('c-id').innerText = i;
         document.getElementById('c-date').innerText = new Date(d).toLocaleDateString();
-        // QR Generation
-        let verifyLink = "https://werbharat.com/verify.php?id=" + i;
-        document.getElementById('c-qr').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(verifyLink);
+        // Generate QR
+        document.getElementById('c-qr').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Verified Student: " + n + ", ID: " + i;
+        // Generate Barcode
+        document.getElementById('c-barcode').innerText = "*" + i + "*";
         document.getElementById('cert-view').style.display = 'block';
     }
-    
     function openRegCard(n, f, t, i, m, d, p) {
         document.getElementById('rc-name').innerText = n;
         document.getElementById('rc-father').innerText = f;
@@ -423,39 +392,12 @@
         document.getElementById('rc-photo').src = p || "";
         document.getElementById('reg-view').style.display = 'block';
     }
-    
     function openResult(n, f, c, i) {
-        document.getElementById('r-name').innerText = n || "Mithilesh Choubey";
-        document.getElementById('r-father').innerText = f || "Father Name";
-        document.getElementById('r-course').innerText = c || "BEMS";
-        document.getElementById('r-id').innerText = i || "TWER-001";
+        document.getElementById('r-name').innerText = n;
+        document.getElementById('r-father').innerText = f;
+        document.getElementById('r-course').innerText = c;
+        document.getElementById('r-id').innerText = i;
         document.getElementById('result-view').style.display = 'block';
-    }
-    
-    function updateAdmit() {
-        document.getElementById('a-date-val').innerText = document.getElementById('exam-date').value;
-        document.getElementById('a-center-val').innerText = document.getElementById('exam-center').value;
-    }
-    
-    // Doctor Desk Logic
-    function openDoctorDesk() {
-        document.getElementById('doctor-view').style.display = 'block';
-        document.getElementById('rx-date').valueAsDate = new Date();
-    }
-    function updateRxView() {
-        document.getElementById('v-name').innerText = "Patient: " + document.getElementById('rx-name').value;
-        document.getElementById('v-age').innerText = "Age: " + document.getElementById('rx-age').value;
-        document.getElementById('v-date').innerText = "Date: " + document.getElementById('rx-date').value;
-        document.getElementById('v-symp').innerText = document.getElementById('rx-symp').value;
-    }
-    function addMed() {
-        let m = document.getElementById('rx-med-input').value;
-        let d = document.getElementById('rx-dose').value;
-        if(m) {
-            let li = document.createElement("li");
-            li.innerHTML = `💊 <b>${m}</b> - ${d}`;
-            document.getElementById('med-list').appendChild(li);
-        }
     }
 </script>
 </body>
