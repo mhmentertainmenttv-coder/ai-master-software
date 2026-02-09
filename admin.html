@@ -3,42 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TWER Admin Panel</title>
+    <title>TWER Super Admin ERP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39+Text&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
         
-        #login-screen { display: flex; justify-content: center; align-items: center; height: 100vh; background: #004d40; }
-        .login-box { background: white; padding: 30px; border-radius: 10px; width: 300px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .login-box select, .login-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .login-box button { width: 100%; padding: 12px; background: #004d40; color: white; border: none; font-size: 16px; border-radius: 5px; cursor: pointer; }
+        /* --- Login Screen --- */
+        #login-screen { display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #004d40 0%, #00251a 100%); }
+        .login-box { background: white; padding: 40px; border-radius: 15px; width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .login-box img { width: 80px; margin-bottom: 10px; }
+        .login-box input, .login-box select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .login-box button { width: 100%; padding: 12px; background: #004d40; color: white; border: none; font-size: 16px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 
-        #dashboard { display: none; padding: 15px; }
-        .header { background: white; padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .btn { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; color: white; margin-left: 5px; text-decoration: none; }
+        /* --- Dashboard Header --- */
+        #dashboard { display: none; padding: 20px; max-width: 1400px; margin: auto; }
+        .header { background: white; padding: 15px 25px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; border-bottom: 4px solid #004d40; }
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-area img { height: 50px; }
+        
+        /* --- Sheet Manager (Multiple Sheets) --- */
+        .sheet-manager { background: #e8f5e9; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 10px; align-items: center; border: 1px solid #c8e6c9; }
+        .sheet-manager select { padding: 8px; border-radius: 5px; border: 1px solid #004d40; flex: 1; }
+        
+        /* --- Buttons --- */
+        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; color: white; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
         
         .btn-call { background: #0288d1; }  
         .btn-wa { background: #25d366; }    
-        .btn-cert { background: #ff9800; }  
-        .btn-logout { background: #d32f2f; } 
-        
+        .btn-cert { background: #d32f2f; }
+        .btn-icard { background: #9c27b0; }
+        .btn-admit { background: #ff9800; }  
+        .btn-result { background: #3f51b5; }
+        .btn-logout { background: #333; }
+        .btn-add { background: #004d40; }
+
+        /* --- Data Cards --- */
         .filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .filters input, .filters select { padding: 10px; flex: 1; border: 1px solid #ccc; border-radius: 5px; }
-
-        .card-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; }
-        .data-card { background: white; padding: 15px; border-radius: 10px; border-top: 5px solid #004d40; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; }
-        .photo-box { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; position: absolute; top: 15px; right: 15px; border: 2px solid #eee; }
+        .filters input, .filters select { padding: 10px; flex: 1; border: 1px solid #ddd; border-radius: 5px; }
         
-        .action-bar { margin-top: 15px; display: flex; gap: 5px; flex-wrap: wrap; border-top: 1px solid #eee; padding-top: 10px; }
-        .action-bar a, .action-bar button { flex: 1; text-align: center; }
-
-        #cert-print { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; text-align: center; overflow-y: auto; }
-        .cert-border { border: 10px double #004d40; padding: 40px; max-width: 800px; margin: 20px auto; background: #fff; position: relative; }
+        .card-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px; }
+        .data-card { background: white; padding: 20px; border-radius: 12px; border-top: 5px solid #004d40; box-shadow: 0 3px 10px rgba(0,0,0,0.08); position: relative; }
+        .photo-box { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; position: absolute; top: 20px; right: 20px; border: 3px solid #eee; }
         
+        .action-bar { margin-top: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; border-top: 1px solid #eee; padding-top: 15px; }
+        .contact-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+
+        /* ---------------- PRINT TEMPLATES (Hidden on Screen) ---------------- */
+        .print-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; text-align: center; }
+        .print-controls { position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 10000; }
+        
+        /* 1. CERTIFICATE DESIGN (Updated with QR/Barcode) */
+        .cert-box { width: 900px; height: 650px; padding: 40px; border: 5px double #004d40; margin: 50px auto; position: relative; text-align: center; background: white; outline: 2px solid #004d40; outline-offset: 10px; }
+        .cert-logo { width: 100px; display: block; margin: 0 auto 10px; }
+        .qr-code { width: 80px; height: 80px; position: absolute; bottom: 50px; right: 50px; }
+        .barcode { font-family: 'Libre Barcode 39 Text', cursive; font-size: 30px; position: absolute; bottom: 50px; left: 50px; }
+
+        /* 2. I-CARD DESIGN */
+        .icard-box { width: 320px; height: 480px; border: 1px solid #ddd; margin: 50px auto; border-radius: 10px; overflow: hidden; background: url('https://www.transparenttextures.com/patterns/cubes.png'); position: relative; font-family: sans-serif; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .icard-header { background: #004d40; color: white; padding: 15px; height: 70px; }
+        .icard-photo { width: 110px; height: 110px; border-radius: 50%; border: 4px solid white; object-fit: cover; margin-top: -55px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .icard-details { padding: 10px; text-align: center; line-height: 1.5; font-size: 14px; }
+        .icard-footer { background: #004d40; color: white; padding: 5px; position: absolute; bottom: 0; width: 100%; font-size: 10px; }
+
+        /* 3. ADMIT CARD */
+        .admit-box { width: 750px; border: 2px solid #000; margin: 50px auto; padding: 20px; text-align: left; }
+        .admit-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .admit-table td { border: 1px solid #333; padding: 8px; }
+
+        /* 4. MARKSHEET (RESULT) */
+        .result-box { width: 800px; border: 5px double #333; margin: 50px auto; padding: 30px; }
+        .marks-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .marks-table th, .marks-table td { border: 1px solid #000; padding: 10px; text-align: center; }
+
         @media print {
             body * { visibility: hidden; }
-            #cert-print, #cert-print * { visibility: visible; }
-            #cert-print { position: absolute; left: 0; top: 0; width: 100%; }
-            .no-print { display: none; }
+            .print-modal, .print-modal * { visibility: visible; }
+            .print-modal { position: absolute; left: 0; top: 0; }
+            .print-controls, .no-print { display: none !important; }
+            @page { margin: 0; }
         }
     </style>
 </head>
@@ -46,7 +89,9 @@
 
     <div id="login-screen">
         <div class="login-box">
-            <h2 style="color:#004d40;">🔐 TWER Admin</h2>
+            <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2991/2991148.png'">
+            <h2 style="color:#004d40; margin:0;">TWER SUPER ADMIN</h2>
+            <br>
             <select id="role">
                 <option value="Admin">Master Admin</option>
                 <option value="SubAdmin">Sub Admin</option>
@@ -58,17 +103,27 @@
 
     <div id="dashboard">
         <div class="header">
-            <div>
-                <h3 style="margin:0; color:#004d40;">Admin Panel</h3>
-                <small id="user-display" style="color:gray;">--</small>
+            <div class="logo-area">
+                <img src="logo.png" onerror="this.style.display='none'">
+                <div>
+                    <h2 style="margin:0; color:#004d40;">Admin Dashboard</h2>
+                    <small>Multiple Sheets & ERP System</small>
+                </div>
             </div>
             <div>
                 <button class="btn btn-logout" onclick="logout()">Logout</button>
             </div>
         </div>
 
+        <div class="sheet-manager">
+            <strong>📂 Select Database (Sheet):</strong>
+            <select id="sheet-selector" onchange="changeSheet()"></select>
+            <button class="btn btn-add" onclick="addNewSheet()">➕ Add New Sheet</button>
+            <button class="btn" style="background:#d32f2f;" onclick="deleteSheet()">🗑️ Remove</button>
+        </div>
+
         <div class="filters">
-            <input type="text" id="search" placeholder="🔍 Search Name/Mobile..." onkeyup="filterData()">
+            <input type="text" id="search" placeholder="🔍 Search Name, ID, Mobile..." onkeyup="filterData()">
             <select id="filterType" onchange="filterData()">
                 <option value="All">All Categories</option>
                 <option value="Student">Student</option>
@@ -76,7 +131,7 @@
                 <option value="Practitioner">Practitioner</option>
                 <option value="Dealer">Dealer</option>
             </select>
-            <button class="btn" style="background:#333;" onclick="loadData()">🔄 Refresh</button>
+            <button class="btn" style="background:#333;" onclick="loadData()">🔄 Refresh Data</button>
         </div>
 
         <p id="total-count" style="text-align:center; font-weight:bold; color:#004d40;"></p>
@@ -84,39 +139,187 @@
         <div id="data-container" class="card-container"></div>
     </div>
 
-    <div id="cert-print">
-        <div class="cert-border">
-            <h1 style="color:#004d40; font-family:serif;">CERTIFICATE OF REGISTRATION</h1>
-            <h3>THE WORLD EDUCATION RESEARCH (TWER)</h3>
+    <div id="cert-view" class="print-modal">
+        <div class="print-controls">
+            <button class="btn btn-add" onclick="window.print()">🖨️ Print</button>
+            <button class="btn btn-logout" onclick="closePrint('cert-view')">❌ Close</button>
+        </div>
+        <div class="cert-box">
+            <img src="logo.png" class="cert-logo">
+            <h2 style="color:#004d40; font-family:serif; margin:0; font-size:32px;">CERTIFICATE OF REGISTRATION</h2>
+            <h3 style="margin:5px 0;">THE WORLD EDUCATION RESEARCH (TWER)</h3>
             <p>Electro Homeopathic Board, Patna</p>
-            <hr style="width:70%; margin:20px auto;">
+            <hr style="width:70%; margin:15px auto; border:1px solid #004d40;">
             <br>
             <p>This is to certify that</p>
-            <h1 id="c-name" style="color:#d32f2f; font-family:cursive;">Name</h1>
+            <h1 id="c-name" style="color:#d32f2f; font-family:cursive; font-size:48px; margin:10px 0;">Name</h1>
             <p>Son/Daughter of <b id="c-father">Father</b></p>
             <p>Has been registered for <b id="c-type">Course</b></p>
             <br>
-            <div style="display:flex; justify-content:space-between; padding:0 50px;">
-                <p><b>Reg No:</b> <span id="c-id">ID</span></p>
-                <p><b>Date:</b> <span id="c-date">Date</span></p>
+            <div style="display:flex; justify-content:space-between; padding:0 60px; text-align:left;">
+                <div>
+                    <p><b>Reg No:</b> <span id="c-id">ID</span></p>
+                    <p><b>Enrollment No:</b> <span id="c-enroll">EN-000</span></p>
+                </div>
+                <div style="text-align:right;">
+                    <p><b>Date:</b> <span id="c-date">Date</span></p>
+                    <p><b>Session:</b> <span id="c-session">2025-26</span></p>
+                </div>
             </div>
             <br><br><br>
-            <div style="display:flex; justify-content:space-between; padding:0 50px;">
-                <b>__________<br>Secretary</b>
-                <b>__________<br>President</b>
+            <div style="display:flex; justify-content:space-between; padding:0 60px;">
+                <b>__________________<br>Secretary</b>
+                <b>__________________<br>President</b>
             </div>
+            <img id="c-qr" class="qr-code" src="">
+            <div id="c-barcode" class="barcode"></div>
+        </div>
+    </div>
+
+    <div id="icard-view" class="print-modal">
+        <div class="print-controls">
+            <button class="btn btn-add" onclick="window.print()">🖨️ Print</button>
+            <button class="btn btn-logout" onclick="closePrint('icard-view')">❌ Close</button>
+        </div>
+        <div class="icard-box">
+            <div class="icard-header">
+                <img src="logo.png" style="height:40px; float:left;">
+                <h3 style="margin:0;">TWER</h3>
+                <small>Identity Card</small>
+            </div>
+            <img id="i-photo" class="icard-photo" src="">
+            <div class="icard-details">
+                <h2 id="i-name" style="margin:5px 0; color:#004d40;">Name</h2>
+                <p><b>ID:</b> <span id="i-id">ID</span></p>
+                <p><b>Course:</b> <span id="i-course">Course</span></p>
+                <p><b>DOB:</b> <span id="i-dob">--/--/----</span></p>
+                <p><b>Mobile:</b> <span id="i-mobile">Mobile</span></p>
+                <div id="i-barcode" style="font-family:'Libre Barcode 39 Text'; font-size:24px; margin-top:10px;"></div>
+            </div>
+            <div class="icard-footer">www.twer.in | Authorized Signatory</div>
+        </div>
+    </div>
+
+    <div id="admit-view" class="print-modal">
+        <div class="print-controls">
+            <div class="no-print" style="background:white; padding:10px; border-radius:5px;">
+                <input type="text" id="exam-date" placeholder="Exam Date">
+                <input type="text" id="exam-center" placeholder="Exam Center">
+                <button onclick="updateAdmit()">Update</button>
+            </div>
+            <button class="btn btn-add" onclick="window.print()">🖨️ Print</button>
+            <button class="btn btn-logout" onclick="closePrint('admit-view')">❌ Close</button>
+        </div>
+        <div class="admit-box">
+            <div style="text-align:center; border-bottom:2px solid black; padding-bottom:10px;">
+                <img src="logo.png" style="height:60px; float:left;">
+                <h1>ADMIT CARD</h1>
+                <h3>THE WORLD EDUCATION RESEARCH</h3>
+            </div>
+            <div style="margin-top:20px; overflow:hidden;">
+                <img id="a-photo" src="" style="width:120px; height:140px; border:1px solid black; float:right;">
+                <p><b>Name:</b> <span id="a-name"></span></p>
+                <p><b>Father's Name:</b> <span id="a-father"></span></p>
+                <p><b>Course:</b> <span id="a-course"></span></p>
+                <p><b>Roll No:</b> <span id="a-id"></span></p>
+            </div>
+            <table class="admit-table">
+                <tr><th>Exam Date</th><th>Time</th><th>Exam Center</th></tr>
+                <tr><td id="a-date-val">TBA</td><td>10:00 AM - 01:00 PM</td><td id="a-center-val">TBA</td></tr>
+            </table>
+            <br><br><br>
+            <div style="display:flex; justify-content:space-between;">
+                <b>Student Sign</b>
+                <b>Controller of Exam</b>
+            </div>
+        </div>
+    </div>
+
+    <div id="result-view" class="print-modal">
+        <div class="print-controls">
+            <button class="btn btn-add" onclick="window.print()">🖨️ Print</button>
+            <button class="btn btn-logout" onclick="closePrint('result-view')">❌ Close</button>
+        </div>
+        <div class="result-box">
+            <div style="text-align:center;">
+                <img src="logo.png" style="height:60px;">
+                <h2>STATEMENT OF MARKS</h2>
+                <p>The World Education Research (TWER)</p>
+            </div>
+            <hr>
+            <p><b>Name:</b> <span id="r-name"></span> | <b>Roll No:</b> <span id="r-id"></span></p>
+            <p><b>Course:</b> <span id="r-course"></span></p>
+            
+            <table class="marks-table">
+                <tr><th>Subject</th><th>Full Marks</th><th>Pass Marks</th><th>Obtained</th></tr>
+                <tr><td>Anatomy & Physiology</td><td>100</td><td>40</td><td contenteditable="true">00</td></tr>
+                <tr><td>Pathology</td><td>100</td><td>40</td><td contenteditable="true">00</td></tr>
+                <tr><td>Practice of Medicine</td><td>100</td><td>40</td><td contenteditable="true">00</td></tr>
+                <tr><td>Materia Medica</td><td>100</td><td>40</td><td contenteditable="true">00</td></tr>
+                <tr><td><b>TOTAL</b></td><td><b>400</b></td><td><b>160</b></td><td contenteditable="true"><b>000</b></td></tr>
+            </table>
+            <p style="font-size:12px; margin-top:5px;">* Click on marks to edit before printing.</p>
             <br><br>
-            <button onclick="window.print()" class="no-print btn btn-call">🖨️ Print</button>
-            <button onclick="closeCert()" class="no-print btn btn-logout">❌ Close</button>
+            <div style="display:flex; justify-content:space-between;">
+                <b>Verified By</b>
+                <b>Controller of Examinations</b>
+            </div>
         </div>
     </div>
 
 <script>
-    // ✅ आपकी लिंक यहाँ लगा दी गई है
-    const API_URL = "https://script.google.com/macros/s/AKfycbyvhiyDv1m_7wEDwfxapaymNel3xSy4qB3ArYT7HrbJKWdcsO_LBXYceNU64xI8lFAp/exec"; 
-
+    // --- MAIN CONFIGURATION ---
+    const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbyvhiyDv1m_7wEDwfxapaymNel3xSy4qB3ArYT7HrbJKWdcsO_LBXYceNU64xI8lFAp/exec"; // Old Default
+    
+    let sheets = JSON.parse(localStorage.getItem("twer_sheets")) || [{name: "Default Database", url: DEFAULT_URL}];
+    let currentSheetIndex = 0;
     let allData = [];
     let userRole = "";
+
+    // --- INITIALIZE ---
+    window.onload = function() {
+        populateSheetSelector();
+    };
+
+    function populateSheetSelector() {
+        const sel = document.getElementById('sheet-selector');
+        sel.innerHTML = "";
+        sheets.forEach((s, i) => {
+            let opt = document.createElement('option');
+            opt.value = i;
+            opt.innerText = s.name;
+            sel.appendChild(opt);
+        });
+    }
+
+    function addNewSheet() {
+        let name = prompt("Enter Name for new Sheet (e.g. Nursing 2026):");
+        let url = prompt("Paste Web App URL (ends with /exec):");
+        if(name && url && url.includes("script.google.com")) {
+            sheets.push({name: name, url: url});
+            localStorage.setItem("twer_sheets", JSON.stringify(sheets));
+            populateSheetSelector();
+            alert("✅ Sheet Added!");
+        } else {
+            alert("❌ Invalid Input!");
+        }
+    }
+
+    function deleteSheet() {
+        if(sheets.length > 1 && confirm("Delete selected sheet?")) {
+            sheets.splice(document.getElementById('sheet-selector').value, 1);
+            localStorage.setItem("twer_sheets", JSON.stringify(sheets));
+            populateSheetSelector();
+            changeSheet();
+        } else {
+            alert("Cannot delete default sheet.");
+        }
+    }
+
+    function changeSheet() {
+        currentSheetIndex = document.getElementById('sheet-selector').value;
+        loadData();
+    }
 
     function handleLogin() {
         const role = document.getElementById('role').value;
@@ -125,7 +328,6 @@
             userRole = role;
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
-            document.getElementById('user-display').innerText = "Logged in: " + userRole;
             loadData();
         } else {
             alert("❌ Wrong Password!");
@@ -138,16 +340,18 @@
         document.getElementById('loading').style.display = 'block';
         document.getElementById('data-container').innerHTML = "";
         
-        fetch(API_URL)
+        const activeURL = sheets[currentSheetIndex].url;
+
+        fetch(activeURL)
         .then(res => res.json())
         .then(data => {
             allData = data;
             document.getElementById('loading').style.display = 'none';
-            document.getElementById('total-count').innerText = "Total Records: " + data.length;
+            document.getElementById('total-count').innerText = "Records Found: " + data.length;
             renderData(data);
         })
         .catch(err => {
-            document.getElementById('loading').innerHTML = "Error loading data. Check internet.";
+            document.getElementById('loading').innerHTML = "Error loading data. Check URL.";
         });
     }
 
@@ -155,28 +359,35 @@
         const container = document.getElementById('data-container');
         container.innerHTML = "";
 
-        if(data.length === 0) {
-            container.innerHTML = "<p>No Data Found.</p>"; return;
-        }
-
-        // Reverse to show newest first
         data.slice().reverse().forEach(item => {
-            let certBtn = (userRole === "Admin") ? `<button class="btn btn-cert" onclick="generateCert('${item.name}', '${item.father}', '${item.course || item.type}', '${item.appNo}')">📜 Cert</button>` : "";
+            let actions = "";
+            if (userRole === "Admin") {
+                // Pass all data to generator functions
+                actions = `
+                    <div class="action-bar">
+                        <button class="btn btn-cert" onclick="genCert('${item.name}','${item.father}','${item.course||item.type}','${item.appNo}','${item.date}')">📜 Cert</button>
+                        <button class="btn btn-icard" onclick="genICard('${item.name}','${item.course||item.type}','${item.appNo}','${item.photo}','${item.mobile}')">🆔 I-Card</button>
+                        <button class="btn btn-admit" onclick="genAdmit('${item.name}','${item.father}','${item.course||item.type}','${item.appNo}','${item.photo}')">📝 Admit</button>
+                        <button class="btn btn-result" onclick="genResult('${item.name}','${item.course||item.type}','${item.appNo}')">📊 Marks</button>
+                    </div>
+                `;
+            }
+
             let photoHTML = item.photo ? `<img src="${item.photo}" class="photo-box">` : '';
 
             let card = `
                 <div class="data-card">
                     ${photoHTML}
-                    <h3 style="margin-right:60px;">${item.name}</h3>
-                    <span style="background:#eee; padding:2px 5px; font-size:12px;">${item.type}</span>
+                    <h3>${item.name}</h3>
+                    <span class="badge">${item.type}</span>
                     <p><b>ID:</b> ${item.appNo}</p>
                     <p><b>Father:</b> ${item.father}</p>
-                    <p><b>Date:</b> ${new Date(item.date).toLocaleDateString()}</p>
-                    <div class="action-bar">
+                    <p><b>Course:</b> ${item.course || 'N/A'}</p>
+                    <div class="contact-bar">
                         <a href="tel:${item.mobile}" class="btn btn-call">📞 Call</a>
-                        <a href="https://wa.me/91${item.mobile}?text=Namaste ${item.name}..." target="_blank" class="btn btn-wa">💬 WhatsApp</a>
-                        ${certBtn}
+                        <a href="https://wa.me/91${item.mobile}" target="_blank" class="btn btn-wa">💬 Chat</a>
                     </div>
+                    ${actions}
                 </div>`;
             container.innerHTML += card;
         });
@@ -186,20 +397,70 @@
         const search = document.getElementById('search').value.toLowerCase();
         const type = document.getElementById('filterType').value;
         const filtered = allData.filter(item => {
-            return (String(item.name).toLowerCase().includes(search) || String(item.mobile).includes(search)) && (type === "All" || item.type === type);
+            return (String(item.name).toLowerCase().includes(search) || String(item.appNo).toLowerCase().includes(search)) && (type === "All" || item.type === type);
         });
         renderData(filtered);
     }
 
-    function generateCert(n, f, t, i) {
+    function closePrint(id) { document.getElementById(id).style.display = 'none'; }
+
+    // --- GENERATORS ---
+    
+    // 1. Certificate Generator
+    function genCert(n, f, t, i, d) {
+        let session = prompt("Enter Session (e.g. 2025-26):", "2025-26");
+        let enroll = prompt("Enter Enrollment No:", "EN-" + i);
+
         document.getElementById('c-name').innerText = n;
         document.getElementById('c-father').innerText = f;
         document.getElementById('c-type').innerText = t;
         document.getElementById('c-id').innerText = i;
-        document.getElementById('c-date').innerText = new Date().toLocaleDateString();
-        document.getElementById('cert-print').style.display = 'block';
+        document.getElementById('c-date').innerText = new Date(d).toLocaleDateString();
+        document.getElementById('c-session').innerText = session;
+        document.getElementById('c-enroll').innerText = enroll;
+        
+        // Generate QR
+        document.getElementById('c-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Verified Student: ${n}, ID: ${i}, Course: ${t}`;
+        // Generate Barcode Text
+        document.getElementById('c-barcode').innerText = "*" + i + "*";
+        
+        document.getElementById('cert-view').style.display = 'block';
     }
-    function closeCert() { document.getElementById('cert-print').style.display = 'none'; }
+
+    // 2. I-Card Generator
+    function genICard(n, c, i, p, m) {
+        document.getElementById('i-name').innerText = n;
+        document.getElementById('i-course').innerText = c;
+        document.getElementById('i-id').innerText = i;
+        document.getElementById('i-mobile').innerText = m;
+        document.getElementById('i-photo').src = p || "https://via.placeholder.com/150";
+        document.getElementById('i-barcode').innerText = "*" + i + "*";
+        document.getElementById('icard-view').style.display = 'block';
+    }
+
+    // 3. Admit Card Generator
+    function genAdmit(n, f, c, i, p) {
+        document.getElementById('a-name').innerText = n;
+        document.getElementById('a-father').innerText = f;
+        document.getElementById('a-course').innerText = c;
+        document.getElementById('a-id').innerText = i;
+        document.getElementById('a-photo').src = p || "https://via.placeholder.com/150";
+        document.getElementById('admit-view').style.display = 'block';
+    }
+    
+    function updateAdmit() {
+        document.getElementById('a-date-val').innerText = document.getElementById('exam-date').value;
+        document.getElementById('a-center-val').innerText = document.getElementById('exam-center').value;
+    }
+
+    // 4. Result Generator
+    function genResult(n, c, i) {
+        document.getElementById('r-name').innerText = n;
+        document.getElementById('r-course').innerText = c;
+        document.getElementById('r-id').innerText = i;
+        document.getElementById('result-view').style.display = 'block';
+    }
+
 </script>
 </body>
 </html>
