@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TWER Master ERP</title>
+    <title>TWER Master Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39+Text&display=swap" rel="stylesheet">
     
@@ -12,10 +12,8 @@
         
         /* LOGIN */
         #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #004d40; }
-        .login-box { background: white; padding: 40px; border-radius: 10px; width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        /* LOGO STYLING */
-        .app-logo { height: 100px; margin-bottom: 10px; object-fit: contain; }
-        
+        .login-box { background: white; padding: 40px; border-radius: 10px; width: 320px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .login-box img { height: 100px; margin-bottom: 10px; object-fit: contain; }
         .login-box h3 { color: #004d40; margin: 5px 0 15px 0; }
         .login-box input, .login-box select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         .login-box button { width: 100%; padding: 12px; background: #004d40; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
@@ -23,21 +21,21 @@
         /* DASHBOARD */
         #dashboard { display: none; padding: 20px; max-width: 1400px; margin: auto; }
         .header { background: white; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 5px solid #004d40; }
-        .logo-section { display: flex; align-items: center; gap: 15px; }
-        .logo-section img { height: 65px; }
+        .logo-section img { height: 60px; object-fit: contain; }
         
-        /* CARDS */
+        /* CARD STYLES */
         .card-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 15px; }
         .data-card { background: white; padding: 15px; border-radius: 10px; border-left: 6px solid #004d40; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; }
         .photo-box { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; position: absolute; top: 15px; right: 15px; border: 3px solid #e0f2f1; }
         
-        /* APPROVAL & BUTTONS */
+        /* Approval Switch */
         .approval-box { background: #f9fbe7; padding: 8px; margin-bottom: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #dce775; }
         .status-text { font-weight: bold; font-size: 13px; }
         .status-approved { color: green; } .status-blocked { color: red; }
 
+        /* Action Buttons */
         .action-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 10px; }
-        .btn { padding: 8px; border: none; border-radius: 4px; color: white; font-size: 11px; cursor: pointer; font-weight: bold; width: 100%; display: flex; justify-content: center; align-items: center; text-decoration: none; }
+        .btn { padding: 8px; border: none; border-radius: 4px; color: white; font-size: 11px; cursor: pointer; font-weight: bold; display: flex; justify-content: center; align-items: center; text-decoration: none; }
         
         .btn-toggle { background: #333; color: white; padding: 5px 12px; font-size: 11px; border-radius: 20px; cursor: pointer; border: none; }
         .btn-icard { background: #8e24aa; } .btn-admit { background: #f57c00; } 
@@ -49,7 +47,7 @@
         .print-controls { position: fixed; top: 0; left: 0; width: 100%; background: #263238; padding: 10px; text-align: center; z-index: 10000; display: flex; justify-content: center; gap: 20px; }
         .ctrl-btn { padding: 8px 25px; cursor: pointer; border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 14px; }
         
-        /* --- DOCUMENT STYLES --- */
+        /* DOCUMENT STYLES (SCREEN) */
         .royal-border { 
             background-color: #fffbec;
             background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); 
@@ -61,7 +59,7 @@
         }
 
         .cert-box { width: 900px; height: 640px; padding: 40px; margin: 60px auto; text-align: center; position: relative; }
-        .icard-box { width: 350px; height: 520px; margin: 60px auto; text-align: center; overflow: hidden; position: relative; }
+        .icard-box { width: 320px; height: 500px; margin: 60px auto; text-align: center; overflow: hidden; position: relative; }
         .admit-box { width: 750px; padding: 30px; border: 2px solid #000; margin: 60px auto; text-align: left; background: white; }
         .reg-card-box { width: 700px; padding: 40px; border: 5px double #004d40; margin: 60px auto; text-align: left; background: white; }
         .result-box { width: 800px; padding: 40px; border: 5px double #333; margin: 60px auto; text-align: center; background: white; }
@@ -71,32 +69,35 @@
         .reg-table td { padding: 10px; border-bottom: 1px solid #ddd; font-size: 16px; }
         
         .barcode { font-family: 'Libre Barcode 39 Text', cursive; font-size: 35px; }
-        .qr-code { width: 90px; height: 90px; }
+        .qr-code { width: 90px; height: 90px; object-fit: contain; }
 
-        /* --- PRINT SETTINGS --- */
+        /* --- PRINT SETTINGS (FIXED SIZES) --- */
         @media print {
             body > * { display: none !important; }
             .print-modal.active { display: block !important; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 99999; background: white; }
             .print-controls, .no-print { display: none !important; }
 
-            /* I-CARD: ACTUAL SIZE */
+            /* 1. I-CARD: ACTUAL SIZE (Not A4) */
             .print-modal.active .icard-box {
-                width: 350px !important; height: 520px !important;
-                margin: 50px auto !important;
+                width: 320px !important;  /* Approx 3.3 inches width */
+                height: 500px !important; /* Approx 5.2 inches height */
+                margin: 50px auto !important; /* Center horizontally */
                 border: 3px solid #004d40 !important;
                 box-shadow: none !important;
                 page-break-after: always;
                 -webkit-print-color-adjust: exact; print-color-adjust: exact;
             }
 
-            /* A4 DOCUMENTS */
+            /* 2. A4 DOCUMENTS (Cert, Admit, Result, Reg) */
             .print-modal.active .cert-box, 
             .print-modal.active .admit-box, 
             .print-modal.active .reg-card-box, 
             .print-modal.active .result-box {
-                width: 100% !important; height: 98vh !important;
-                margin: 0 auto !important; box-shadow: none; 
-                border: 5px solid #004d40 !important;
+                width: 100% !important; 
+                height: 98vh !important; /* Fill the page */
+                margin: 0 auto !important; 
+                box-shadow: none; 
+                border: 5px solid #004d40 !important; /* Force Border */
                 page-break-inside: avoid;
                 -webkit-print-color-adjust: exact; print-color-adjust: exact;
             }
@@ -109,7 +110,7 @@
 
     <div id="login-screen">
         <div class="login-box">
-            <img src="1000245887.jpg" class="app-logo" alt="Logo Not Found" onerror="this.src='https://via.placeholder.com/100?text=LOGO+ERROR'">
+            <img src="https://raw.githubusercontent.com/mhmentertainmenttv-coder/ai-master-software/main/1000245887.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
             <h3>TWER ADMIN</h3>
             <select id="role"><option value="Admin">Master Admin</option><option value="SubAdmin">Sub Admin</option></select>
             <input type="password" id="password" placeholder="Password">
@@ -120,7 +121,7 @@
     <div id="dashboard">
         <div class="header">
             <div style="display:flex; align-items:center; gap:10px;">
-                <img src="1000245887.jpg" class="app-logo" style="height:60px;" alt="Logo" onerror="this.style.display='none'">
+                <img src="https://raw.githubusercontent.com/mhmentertainmenttv-coder/ai-master-software/main/1000245887.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" style="height:60px;">
                 <div><h2 style="margin:0; color:#004d40;">TWER ERP</h2><small>Reg No: BR/2022/0321381</small></div>
             </div>
             <button class="btn" style="background:#333; width:auto; padding:10px 20px;" onclick="location.reload()">Logout</button>
@@ -139,7 +140,7 @@
         <div class="print-controls"><button class="ctrl-btn" style="background:green;" onclick="window.print()">Print I-Card</button><button class="ctrl-btn" style="background:red;" onclick="closeModal('icard-view')">Close</button></div>
         <div class="icard-box royal-border">
             <div style="background:#004d40; color:white; padding:15px; border-radius:8px 8px 0 0;">
-                <img src="1000245887.jpg" style="height:40px; float:left;">
+                <img src="https://raw.githubusercontent.com/mhmentertainmenttv-coder/ai-master-software/main/1000245887.jpg" style="height:40px; float:left;">
                 <h3 style="margin:0;">TWER</h3><small>Identity Card</small>
             </div>
             <img id="i-photo" style="width:110px; height:110px; border-radius:50%; margin-top:20px; border:3px solid #004d40; object-fit:cover;">
@@ -158,7 +159,7 @@
     <div id="cert-view" class="print-modal">
         <div class="print-controls"><button class="ctrl-btn" style="background:green;" onclick="window.print()">Print Cert</button><button class="ctrl-btn" style="background:red;" onclick="closeModal('cert-view')">Close</button></div>
         <div class="cert-box royal-border">
-            <img src="1000245887.jpg" style="height:90px;">
+            <img src="https://raw.githubusercontent.com/mhmentertainmenttv-coder/ai-master-software/main/1000245887.jpg" style="height:90px;">
             <h2 style="color:#004d40; font-family:'Playfair Display'; font-size:34px; margin:5px 0;">CERTIFICATE OF REGISTRATION</h2>
             <h3 style="margin:0;">THE WORLD EDUCATION RESEARCH</h3>
             <p>Electro Homeopathic Board, Patna</p>
@@ -187,7 +188,7 @@
         <div class="print-controls"><button class="ctrl-btn" style="background:green;" onclick="window.print()">Print Admit</button><button class="ctrl-btn" style="background:red;" onclick="closeModal('admit-view')">Close</button></div>
         <div class="admit-box">
             <div style="text-align:center; border-bottom:2px solid black; padding-bottom:10px;">
-                <img src="1000245887.jpg" style="height:70px; float:left;">
+                <img src="https://raw.githubusercontent.com/mhmentertainmenttv-coder/ai-master-software/main/1000245887.jpg" style="height:70px; float:left;">
                 <h1>ADMIT CARD</h1><h3>THE WORLD EDUCATION RESEARCH</h3>
             </div>
             <div style="margin-top:20px; overflow:hidden;">
@@ -211,7 +212,7 @@
         <div class="print-controls"><button class="ctrl-btn" style="background:green;" onclick="window.print()">Print Reg</button><button class="ctrl-btn" style="background:red;" onclick="closeModal('reg-view')">Close</button></div>
         <div class="reg-card-box">
             <div style="border-bottom:2px solid #004d40; text-align:center; padding-bottom:10px;">
-                <img src="1000245887.jpg" style="height:70px; float:left;">
+                <img src="https://raw.githubusercontent.com/mhmentertainmenttv-coder/ai-master-software/main/1000245887.jpg" style="height:70px; float:left;">
                 <h2 style="margin:0; color:#004d40;">REGISTRATION CARD</h2>
             </div>
             <img id="rc-photo" src="" style="width:110px; height:130px; border:2px solid black; position:absolute; top:80px; right:40px;">
@@ -230,7 +231,7 @@
     <div id="result-view" class="print-modal">
         <div class="print-controls"><button class="ctrl-btn" style="background:green;" onclick="window.print()">Print Marks</button><button class="ctrl-btn" style="background:red;" onclick="closeModal('result-view')">Close</button></div>
         <div class="result-box">
-            <img src="1000245887.jpg" style="height:80px;">
+            <img src="https://raw.githubusercontent.com/mhmentertainmenttv-coder/ai-master-software/main/1000245887.jpg" style="height:80px;">
             <h2>STATEMENT OF MARKS</h2>
             <hr>
             <div style="text-align:left; display:flex; justify-content:space-between;">
@@ -319,7 +320,7 @@
                 <button class="btn btn-admit" onclick="openModal('admit-view', '${item.name}','${item.course||item.type}','${item.appNo}','${item.photo}','${item.father}')">📝 Admit</button>
                 <button class="btn btn-cert" onclick="openModal('cert-view', '${item.name}','${item.course||item.type}','${item.appNo}','${item.date}','${item.father}')">📜 Cert</button>
                 <button class="btn btn-reg" onclick="openModal('reg-view', '${item.name}','${item.course||item.type}','${item.appNo}','${item.photo}','${item.father}','${item.mobile}','${item.date}')">®️ Reg</button>
-                <button class="btn btn-res" onclick="openModal('result-view', '${item.name}','${item.course||item.type}','${item.appNo}','${item.father}')">📊 Marks</button>
+                <button class="btn btn-res" onclick="openModal('result-view', '${item.name}','${item.course||item.type}','${item.appNo}','${item.father}')">📊 Result</button>
             </div>
         `;
     }
